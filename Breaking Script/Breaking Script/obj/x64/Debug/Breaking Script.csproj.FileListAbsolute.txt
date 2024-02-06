@@ -1,0 +1,240 @@
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\MDK\MDK.options.props
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\MDK\MDK.paths.props
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\Breaking Script.exe.config
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\Breaking Script.exe
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\Breaking Script.pdb
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\Microsoft.Win32.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\netstandard.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.AppContext.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Collections.Concurrent.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Collections.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Collections.NonGeneric.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Collections.Specialized.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.ComponentModel.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.ComponentModel.EventBasedAsync.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.ComponentModel.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.ComponentModel.TypeConverter.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Console.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Data.Common.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.Contracts.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.Debug.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.FileVersionInfo.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.Process.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.StackTrace.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.TextWriterTraceListener.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.Tools.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.TraceSource.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Diagnostics.Tracing.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Drawing.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Dynamic.Runtime.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Globalization.Calendars.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Globalization.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Globalization.Extensions.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.Compression.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.Compression.ZipFile.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.FileSystem.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.FileSystem.DriveInfo.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.FileSystem.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.FileSystem.Watcher.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.IsolatedStorage.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.MemoryMappedFiles.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.Pipes.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.IO.UnmanagedMemoryStream.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Linq.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Linq.Expressions.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Linq.Parallel.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Linq.Queryable.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.Http.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.NameResolution.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.NetworkInformation.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.Ping.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.Requests.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.Security.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.Sockets.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.WebHeaderCollection.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.WebSockets.Client.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Net.WebSockets.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.ObjectModel.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Reflection.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Reflection.Extensions.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Reflection.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Resources.Reader.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Resources.ResourceManager.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Resources.Writer.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.CompilerServices.VisualC.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.Extensions.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.Handles.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.InteropServices.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.Numerics.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Formatters.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Json.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Xml.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.Claims.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Algorithms.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Csp.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Encoding.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Primitives.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.Cryptography.X509Certificates.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.Principal.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Security.SecureString.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Text.Encoding.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Text.Encoding.Extensions.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Text.RegularExpressions.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Threading.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Threading.Overlapped.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Threading.Tasks.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Threading.Tasks.Parallel.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Threading.Thread.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Threading.ThreadPool.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Threading.Timer.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.ValueTuple.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Xml.ReaderWriter.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Xml.XDocument.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Xml.XmlDocument.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Xml.XmlSerializer.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Xml.XPath.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Xml.XPath.XDocument.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\MDKUtilities.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\VRage.Network.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\HavokWrapper.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\ProtoBuf.Net.Core.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Memory.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\VRage.NativeWrapper.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Buffers.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\SixLabors.ImageSharp.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\SixLabors.Core.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\System.Numerics.Vectors.dll
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\SixLabors.ImageSharp.xml
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\bin\SixLabors.Core.xml
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.csproj.AssemblyReference.cache
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.exe.config
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.csproj.CoreCompileInputs.cache
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.csproj.CopyComplete
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.exe
+C:\Users\druan\Desktop\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.pdb
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\MDK\MDK.options.props
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\MDK\MDK.paths.props
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\Breaking Script.exe.config
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\Breaking Script.exe
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\Breaking Script.pdb
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\Microsoft.Win32.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\netstandard.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.AppContext.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Collections.Concurrent.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Collections.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Collections.NonGeneric.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Collections.Specialized.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.ComponentModel.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.ComponentModel.EventBasedAsync.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.ComponentModel.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.ComponentModel.TypeConverter.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Console.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Data.Common.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.Contracts.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.Debug.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.FileVersionInfo.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.Process.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.StackTrace.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.TextWriterTraceListener.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.Tools.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.TraceSource.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Diagnostics.Tracing.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Drawing.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Dynamic.Runtime.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Globalization.Calendars.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Globalization.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Globalization.Extensions.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.Compression.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.Compression.ZipFile.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.FileSystem.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.FileSystem.DriveInfo.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.FileSystem.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.FileSystem.Watcher.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.IsolatedStorage.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.MemoryMappedFiles.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.Pipes.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.IO.UnmanagedMemoryStream.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Linq.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Linq.Expressions.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Linq.Parallel.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Linq.Queryable.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.Http.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.NameResolution.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.NetworkInformation.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.Ping.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.Requests.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.Security.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.Sockets.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.WebHeaderCollection.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.WebSockets.Client.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Net.WebSockets.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.ObjectModel.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Reflection.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Reflection.Extensions.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Reflection.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Resources.Reader.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Resources.ResourceManager.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Resources.Writer.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.CompilerServices.VisualC.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.Extensions.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.Handles.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.InteropServices.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.InteropServices.RuntimeInformation.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.Numerics.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Formatters.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Json.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.Serialization.Xml.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.Claims.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Algorithms.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Csp.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Encoding.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.Cryptography.Primitives.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.Cryptography.X509Certificates.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.Principal.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Security.SecureString.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Text.Encoding.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Text.Encoding.Extensions.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Text.RegularExpressions.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Threading.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Threading.Overlapped.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Threading.Tasks.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Threading.Tasks.Parallel.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Threading.Thread.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Threading.ThreadPool.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Threading.Timer.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.ValueTuple.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Xml.ReaderWriter.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Xml.XDocument.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Xml.XmlDocument.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Xml.XmlSerializer.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Xml.XPath.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Xml.XPath.XDocument.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\MDKUtilities.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\VRage.Network.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\HavokWrapper.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\ProtoBuf.Net.Core.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Memory.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\VRage.NativeWrapper.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Buffers.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Runtime.CompilerServices.Unsafe.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\SixLabors.ImageSharp.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\SixLabors.Core.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\System.Numerics.Vectors.dll
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\SixLabors.ImageSharp.xml
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\bin\SixLabors.Core.xml
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.csproj.AssemblyReference.cache
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.exe.config
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.csproj.CoreCompileInputs.cache
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.csproj.CopyComplete
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.exe
+C:\Users\druan\Desktop\Space Engineers Scripts\Breaking Script\Breaking Script\obj\x64\Debug\Breaking Script.pdb

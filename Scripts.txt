@@ -1,0 +1,274 @@
+Solar Script:
+
+void Main(string argument) {
+    // Solar script to rotate multiple solar panels connected to a rotor. Uses one reference panel, which prefix should be the string in
+    // 'panelPrefix', for one rotor with the prefix 'rotorPrefix'. Here "MS Solar Script Panel 1" is the reference for
+    //  "MS Solar Script Panel 1" and so on.    
+
+
+    int size = 3; //Number of rotors and reference solar panels. Don't change above 9!
+    int critPower = 150; // kWh value, below which the according rotor shall rotate.
+
+    string rotorPrefix = "MS Solar Script Rotor"; //Prefix of all used rotors. First rotor would be named "MS Solar Script Rotor 1".
+    string panelPrefix = "MS Solar Script Panel"; //Same as with the rotors, currently supports up to nine rotors and panels (1-9).
+    
+
+    //Solar rotation itteration for each solar rotator
+    for (int i = 1; i <= size; i++) {
+        IMyMotorStator rotor = GridTerminalSystem.GetBlockWithName(rotorPrefix + " " + i.ToString()) as IMyMotorStator;
+        IMySolarPanel panel = GridTerminalSystem.GetBlockWithName(panelPrefix + " " + i.ToString()) as IMySolarPanel;
+        int currentPower = GetPanelPower(panel);
+
+        if (currentPower <= critPower) {
+            rotor.SetValueFloat("Velocity", 0.5f);                                  //1. Works the same as 2.
+        } else {
+            rotor.GetActionWithName("ResetVelocity").Apply(rotor);   //2. Works the same as 1.
+        }
+    }
+}
+
+public int GetPanelPower(IMySolarPanel panel)  
+{  
+    var _d = panel.DetailedInfo;
+    // IMyTextPanel lcd = GridTerminalSystem.GetBlockWithName("LCD Panel") as IMyTextPanel;
+    // If you want to see what's in DetailedInfo you can write:
+    // Throw new Exception(_d);
+    // Save the code and exit, then run the script on the programmable block to see the output
+    string _power = _d.Split(new string[] {"\n"}, StringSplitOptions.None)[1].Split(' ')[2]; //Checking the MAX Output  
+    int _powerOutput = Convert.ToInt32(Math.Round(Convert.ToDouble(_power))); 
+    return _powerOutput;  
+}
+
+
+
+
+
+
+
+Status Script:
+
+public Program() {
+    // The constructor, called only once every session and
+    // always before any other method is called. Use it to
+    // initialize your script. 
+    //     
+    // The constructor is optional and can be removed if not
+    // needed.
+    // 
+    // It's recommended to set RuntimeInfo.UpdateFrequency 
+    // here, which will allow your script to run itself without a 
+    // timer block.
+}
+
+public void Save() {
+    // Called when the program needs to save its state. Use
+    // this method to save your state to the Storage field
+    // or some other means. 
+    // 
+    // This method is optional and can be removed if not
+    // needed.
+}
+
+public void Main(string argument, UpdateType updateSource) {
+    List<IMyTerminalBlock> batteries = new List<IMyTerminalBlock>();
+    GridTerminalSystem.SearchBlocksOfName("Battery", batteries);
+    double storedPower = 0;
+
+    for (int i = 0; i < batteries.Count; i++) {
+        IMyBatteryBlock battery = batteries[i] as IMyBatteryBlock;
+        storedPower = storedPower + Convert.ToDouble(GetDetailedInfo(battery, 6, 2));
+    }
+
+    string text = batteries.Count.ToString() + " Batteries: " + Math.Round(((storedPower * 100)/(batteries.Count * 3)), 1) + "% at " + storedPower.ToString() + " MWh\n";
+
+
+
+    List<IMyTerminalBlock> oxygenTanks = new List<IMyTerminalBlock>();
+    GridTerminalSystem.SearchBlocksOfName("Oxygen Tank", oxygenTanks);
+    double storedOxygen = 0;
+
+    for (int i = 0; i < oxygenTanks.Count; i++) {
+        IMyGasTank oxy = oxygenTanks[i] as IMyGasTank;
+        string rawValue = GetDetailedInfo(oxy, 2, 1);
+        storedOxygen = storedOxygen + Convert.ToDouble(rawValue.Substring(0, rawValue.Count() - 1));
+    }
+    storedOxygen = Math.Round(storedOxygen / oxygenTanks.Count, 1);
+    text = text + oxygenTanks.Count.ToString() + " Oxygen Tanks: " + storedOxygen.ToString() + "% filled \n";
+
+
+    List<IMyTerminalBlock> hydrogenTanks = new List<IMyTerminalBlock>();
+    GridTerminalSystem.SearchBlocksOfName("Hydrogen Tank", hydrogenTanks);
+    double storedHydrogen = 0;
+
+    for (int i = 0; i < hydrogenTanks.Count; i++) {
+        IMyGasTank hyd = hydrogenTanks[i] as IMyGasTank;
+        string rawValue = GetDetailedInfo(hyd, 2, 1);
+        storedHydrogen = storedHydrogen + Convert.ToDouble(rawValue.Substring(0, rawValue.Count() - 1));
+    }
+
+    storedHydrogen = Math.Round(storedHydrogen / hydrogenTanks.Count, 1);
+    text = text + hydrogenTanks.Count.ToString() + " Hydrogen Tanks: " + storedHydrogen.ToString() + "% filled \n";
+
+    IMyTextPanel lcd = (IMyTextPanel) GridTerminalSystem.GetBlockWithName("MS LCD Panel");
+    lcd.WritePublicText(text);
+
+    IMyCockpit cockpit = (IMyCockpit) GridTerminalSystem.GetBlockWithName("Utility Cockpit");
+    IMyTextSurface surface = cockpit.GetSurface(1);
+    surface.WriteText(text, false);
+}
+
+public string GetDetailedInfo(IMyTerminalBlock block, int line, int word, int pos = 0, int length = 1) {
+    string _d = block.DetailedInfo;
+    string _value = _d.Split('\n')[line].Split(' ')[word];
+
+    if (length == 1) {length = _value.Count();}
+
+    _value = _value.Substring(pos, length);
+    return _value;
+}
+
+
+
+
+(GROUND) BREAKING DISTANCE SCRIPT
+
+public Program() {
+    Runtime.UpdateFrequency = UpdateFrequency.Update10;
+}
+
+public void Main(string argument, UpdateType updateSource) {
+
+    // INITIALIZING
+    bool show_in_cockpit = true;                      // true, if you want the results shown in your cockpit
+    string cockpitName = "Miner Cockpit";       // Name of cockpit
+    int display = 2;                                            // Display number in cockpit
+
+    bool show_safeDistance = false;     // true, if you want the safe distance to be shown, false otherwise
+    double safetyProportion = 1.1;           // safe distance = distance * safetyProportion. Should be greater than 1!
+
+
+
+    // DON'T TOUCH!!!
+    double speed = 0;                // speed in m/s
+    double totalMass = 0;          // mass in Kg
+    double force = 0;                  // force in N
+    double accerlation = 0;        // accerlation in m/s^2
+    double time = 0;                   // time in s
+    double distance = 0;            // distance in m
+    double safeDistance = 0;    // distance * safetyProportion in m
+    string text = "";                     // output text
+
+    double inaccuracyProportion = 1.00;            // additional distance to stop
+
+
+    //Initializes lists of all cockpits and thrusters
+    List<IMyCockpit> cockpits = new List<IMyCockpit>();
+    GridTerminalSystem.GetBlocksOfType<IMyCockpit>(cockpits);
+    IMyCockpit cockpit = null;
+
+    if(cockpits.Count == 0) {
+        Echo("There are no cockpits on this ship! \n");
+        return;
+    }
+    
+    for(int i = 0; i < cockpits.Count; i++) {
+        if (cockpits[i].CustomName == cockpitName) {
+            cockpit = cockpits[i];
+        }
+    }
+    if (cockpit == null) {
+        Echo("There is no cockpit named " + cockpitName + " on this ship! \n");
+    }
+    List<IMyThrust> thrusters = new List<IMyThrust>();
+    GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters);
+    
+
+    //Calculates ship's mass
+    MyShipMass shipMass = cockpit.CalculateShipMass();
+    totalMass = (int) shipMass.TotalMass; // mass including inventory cargo
+    //text = text + "Total Ship Weight: " + totalMass + "Kg \n";
+
+    //Calculates ship's speed
+    speed = Math.Round(cockpit.GetShipSpeed(),3);
+    //text += "Ship Speed: " + speed + "m/s \n";
+
+    //Calculates ship's force
+    for(int i = 0; i < thrusters.Count; i++) {
+        IMyThrust thruster = thrusters[i];
+        if (thruster.Orientation.ToString().Split(',')[0] == cockpit.Orientation.ToString().Split(',')[0]) {
+            force = force + thruster.MaxThrust;
+        }
+    }
+    force = Math.Round(force, 3);
+    //text = text + force + "N \n";
+
+    //Calculates ship's accerlation
+    accerlation = Math.Round(force/totalMass, 3);
+    //text = text + accerlation + "m/s² \n";
+
+    //Calculates ship's time to full stop
+    time = Math.Round(speed/accerlation, 3);
+    text = text + time + " seconds to stop \n";
+
+    //Calculates ship's distance to full stop
+    distance = Math.Round((((speed * time)/2) * inaccuracyProportion), 1);
+    text = text + distance + " meters to full stop \n";
+
+    //If show_safeDistance is true calculates and shows safe distance to full stop
+    if (show_safeDistance) {
+        if (safetyProportion < 1) {safetyProportion = 1;}
+        safeDistance = Math.Round(distance * safetyProportion, 1);
+        text = text + safeDistance + " for a save stop \n";
+    }
+
+
+    //Prints everything on the cockpits panel
+    if (show_in_cockpit) {
+        IMyTextSurface surface = null;
+        try {
+            surface = cockpit.GetSurface(display);
+        }
+        catch (Exception e) {
+            Echo("there is no display with number " + display);
+        }
+        surface.ContentType = ContentType.TEXT_AND_IMAGE;
+        surface.WriteText(text, false);
+    }
+}
+
+
+
+
+MISSILE CTRL
+
+public void Main(string argument, UpdateType updateSource)
+{
+	//Ordering of identifiers of the fireable rockets.
+	string[] identifiers = {"L.1", "R.1", "L.2", "R.2"};
+	
+	for (int i = 0; i < identifiers.Length; i++)
+	{
+		//Find the first connected rocket.
+		try
+		{
+			//Declaring the needed parts
+			IMyThrust thruster = GridTerminalSystem.GetBlockWithName("(Rkt) Ion Thruster (" + identifiers[i] + ")") as IMyThrust;
+			IMyWarhead warhead = GridTerminalSystem.GetBlockWithName("(Rkt) Warhead (" + identifiers[i] + ")") as IMyWarhead;
+			IMyShipMergeBlock mergeBlock = GridTerminalSystem.GetBlockWithName("(Rkt) Merge Block (" + identifiers[i] + ")") as IMyShipMergeBlock;
+			
+			//Start thrusters, arm warhead, release!
+			thruster.ThrustOverridePercentage = 1;
+			warhead.IsArmed = true;
+			warhead.DetonationTime = 30;
+			warhead.StartCountdown();
+			mergeBlock.Enabled = false;
+			
+			break;
+		}
+		
+		catch (Exception e)
+		{
+			continue;
+		}
+	}
+}
