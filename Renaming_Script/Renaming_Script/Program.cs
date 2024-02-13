@@ -54,9 +54,49 @@ namespace IngameScript
         string _assembler;
         string _h2_O2_Generator;
 
-        List<IMyRefinery> refineries = new List<IMyRefinery>();
-        List<IMyAssembler> assembler = new List<IMyAssembler>();
-        List<IMyGasGenerator> h2_O2_Generator = new List<IMyGasGenerator>();
+        // "stolen", try to understand what's happening here
+        bool AddIfType<T>(IMyTerminalBlock block, List<T> list)
+        where T : class, IMyTerminalBlock
+        {
+            var cast = block as T;
+            bool isType = cast != null;
+            if (isType)
+            {
+                list.Add(cast);
+            }
+            return isType;
+        }
+
+        public void Rename<T>(List<T> blocks, string operations)
+        {
+            for (int i = 0; i < blocks.Count; i++)
+            {
+                IMyTerminalBlock currentBlock = (IMyTerminalBlock) blocks[i];
+                string targetName = currentBlock.DefinitionDisplayNameText;
+
+
+
+                if (_removeDlcNaming)
+                {
+                    targetName = targetName.Replace("Industrial ", "");
+                    targetName = targetName.Replace("Sci-Fi ", "");
+                    targetName = targetName.Replace("Warfare ", "");
+                }
+
+                if (operations.Contains("N"))
+                {
+                    targetName += " ";
+                    targetName += (i + 1);
+                }
+
+                if (_prefix != "")
+                    targetName = _prefix + " " + targetName;
+                if (_postfix != "")
+                    targetName = targetName + " " + _postfix;
+
+                currentBlock.CustomName = targetName;
+            }
+        }
 
         public Program()
         {
@@ -77,83 +117,38 @@ namespace IngameScript
             _refineries = _ini.Get("Nebork's Renaming Script", "Refineries").ToString();
             _assembler = _ini.Get("Nebork's Renaming Script", "Assembler").ToString();
             _h2_O2_Generator = _ini.Get("Nebork's Renaming Script", "H2/O2 Generator").ToString();
+            // TODO ADD ALL
 
         }
 
-        List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
         public void Main(string argument, UpdateType updateSource)
         {
+            List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
+
+            List<IMyRefinery> refineries = new List<IMyRefinery>();
+            List<IMyAssembler> assembler = new List<IMyAssembler>();
+            List<IMyGasGenerator> h2_O2_Generator = new List<IMyGasGenerator>();
+
+            List<IMyTerminalBlock> misc = new List<IMyTerminalBlock>();
 
             GridTerminalSystem.GetBlocks(allBlocks);
-            for (int i = 0; i < allBlocks.Count; i++)
+            foreach (IMyTerminalBlock block in allBlocks)
             {
-                IMyTerminalBlock CurrentBlock = allBlocks[i];
-                string targetName = CurrentBlock.DefinitionDisplayNameText;
-
-                if(_removeDlcNaming)
+                if (AddIfType(block, refineries)
+                || AddIfType(block, assembler)
+                || AddIfType(block, h2_O2_Generator))
                 {
-                    targetName = targetName.Replace("Industrial ", "");
-                    targetName = targetName.Replace("Sci-Fi ", "");
-                    targetName = targetName.Replace("Warfare ", "");
-                }
-
-                if(_prefix != "")
-                    targetName = _prefix + " " + targetName;
-                if (_postfix != "")
-                    targetName = targetName + " " + _postfix;
-
-                CurrentBlock.CustomName = targetName;
-            }
-
-            GridTerminalSystem.GetBlocksOfType<IMyRefinery>(refineries);
-            foreach (IMyRefinery refinery in refineries)
-            {
-                Echo(refinery.CustomName);
-            }
-
-            /* OLD (till 12.2.24) CODE
-            
-            string Prefix = "(HRP)";
-
-            GridTerminalSystem.GetBlocks(allBlocks);
-            for (int i = 0; i < allBlocks.Count; i++)
-            {
-                IMyTerminalBlock CurrentBlock = allBlocks[i];
-                string CurrentBlockName = CurrentBlock.DefinitionDisplayNameText;
-
-                if (CurrentBlockName.Contains("Industrial"))
-                {
-                    CurrentBlock.CustomName = Prefix + CurrentBlockName.Replace("Industrial ", "");
-                }
-                else if (CurrentBlockName.Contains("Sci-Fi"))
-                {
-                    CurrentBlock.CustomName = Prefix + CurrentBlockName.Replace("Sci-Fi ", "");
-                }
-                else if (CurrentBlockName.Contains("Warfare"))
-                {
-                    CurrentBlock.CustomName = Prefix + CurrentBlockName.Replace("Warfare ", "");
-                }
-                else if (CurrentBlockName.Contains("Wheel Suspension"))
-                {
-                    // SPECIAL CASE!!! Keeps the last name part "Right" and "Left"
-                    string[] parts = CurrentBlockName.Split(' ');
-                    CurrentBlock.CustomName = Prefix + "Wheel - " + parts[parts.Length - 1];
+                    // IS already added by the AddIfType, 
                 }
                 else
                 {
-                    CurrentBlock.CustomName = Prefix + CurrentBlockName;
+                    misc.Add(block);
                 }
+            }
 
-                if (CurrentBlockName.Contains("Large"))
-                {
-                    CurrentBlock.CustomName = CurrentBlock.CustomName.Replace("Large ", "") + " (Large)";
-                }
-                else if (CurrentBlockName.Contains("Small"))
-                {
-                    CurrentBlock.CustomName = CurrentBlock.CustomName.Replace("Small ", "") + " (Small)";
-                }
-            }*/
-
+            Rename(refineries, _refineries);
+            Rename(assembler, _assembler);
+            Rename(h2_O2_Generator, _h2_O2_Generator);
         }
     }
 }
