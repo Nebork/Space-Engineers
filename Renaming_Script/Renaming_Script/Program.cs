@@ -43,34 +43,58 @@ namespace IngameScript
         //
         // to learn more about ingame scripts.
 
+        MyIni _ini = new MyIni();
+
+        string _prefix;
+        string _postfix;
+        bool _workOnSubgrids;
+        bool _removeDlcNaming;
+
+        string _refineries;
+        string _assembler;
+        string _h2_O2_Generator;
+
         public Program()
         {
-            // The constructor, called only once every session and
-            // always before any other method is called. Use it to
-            // initialize your script. 
-            //     
-            // The constructor is optional and can be removed if not
-            // needed.
-            // 
-            // It's recommended to set Runtime.UpdateFrequency 
-            // here, which will allow your script to run itself without a 
-            // timer block.
-        }
+            // Call the TryParse method on the custom data. This method will
+            // return false if the source wasn't compatible with the parser.
+            MyIniParseResult result;
+            if (!_ini.TryParse(Me.CustomData, out result))
+                throw new Exception(result.ToString());
 
-        public void Save()
-        {
-            // Called when the program needs to save its state. Use
-            // this method to save your state to the Storage field
-            // or some other means. 
-            // 
-            // This method is optional and can be removed if not
-            // needed.
+
+            _prefix = _ini.Get("Nebork's Renaming Script", "Prefix").ToString();
+            _postfix = _ini.Get("Nebork's Renaming Script", "Postfix").ToString();
+            _workOnSubgrids = _ini.Get("Nebork's Renaming Script", "WorkOnSubgrids").ToBoolean();
+            _removeDlcNaming = _ini.Get("Nebork's Renaming Script", "RemoveDlcNaming").ToBoolean();
+
+            _refineries = _ini.Get("Nebork's Renaming Script", "Refineries").ToString();
+            _assembler = _ini.Get("Nebork's Renaming Script", "Assembler").ToString();
+            _h2_O2_Generator = _ini.Get("Nebork's Renaming Script", "H2/O2 Generator").ToString();
+
+            Runtime.UpdateFrequency = UpdateFrequency.None;
         }
 
         List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
         public void Main(string argument, UpdateType updateSource)
         {
-            string Prefix = "(HRP) ";
+            GridTerminalSystem.GetBlocks(allBlocks);
+            for (int i = 0; i < allBlocks.Count; i++)
+            {
+                IMyTerminalBlock CurrentBlock = allBlocks[i];
+                string targetName = CurrentBlock.DefinitionDisplayNameText;
+
+                if(_prefix != "")
+                    targetName = _prefix + " " + targetName;
+                if (_postfix != "")
+                    targetName = targetName + " " + _postfix;
+
+                CurrentBlock.CustomName = targetName;
+            }
+
+            /* OLD (till 12.2.24) CODE
+            
+            string Prefix = "(HRP)";
 
             GridTerminalSystem.GetBlocks(allBlocks);
             for (int i = 0; i < allBlocks.Count; i++)
@@ -109,7 +133,8 @@ namespace IngameScript
                 {
                     CurrentBlock.CustomName = CurrentBlock.CustomName.Replace("Small ", "") + " (Small)";
                 }
-            }
+            }*/
+
         }
     }
 }

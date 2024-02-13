@@ -1,0 +1,60 @@
+[Nebork's Renaming Script]
+
+; With this script it is possible to set a naming basis for an entire ship or a station at once and have all of the blocks named and set properly.
+; It uses a tag system, meaning after every type of functional block you give the tags of how you want them to be named and which functions to set.
+; Order of tags is not required.
+; A list of all tags with description is given below
+;
+;
+; G: Groups all of the blocks into one group
+; H: Show on HUD
+; T: Show in terminal
+; I: Show in inventory
+; C: Use conveyor system  // TODO Usually always true, should I change the tag to only be needed if not wanted to use the conveyor? Would be more confusing.
+; N: Number all blocks, "Refineries: N" leads to the refineries being named "Refinery 1", "Refinery 2", ... // TODO Should I consider 01, 02, ... if >10? Add a setting?
+; R: Renames the base name to a given string. Example: 'Refineries: RG "Smelter"' leads to all Refineries being named to 'Smelter' in addition to prefixes, groups etc.
+; TODO add more, what is needed/wanted. Even some specific, which work for a set of blocks only. A parameter "-", which means to not change the naming of a group
+;
+; Example: Refineries: GICNR "Smelter"
+; All refineries are in a Group "Smelter", they show in the inventory, use the conveyor network. They are called "Smelter 1", "Smelter 2", ...
+;
+;
+; ------------------------------------------------------
+; -------------------Global Settings--------------------
+; ------------------------------------------------------
+;
+; Sets a pre-/postfix for every block and group. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
+Prefix=(HRP)
+Postfix=
+;
+; Decides if all connected grids should be named and set in unison to this grid. [true/false]
+WorkOnSubgrids=false
+;
+; Removes DLC block naming. "Warfare Battery" is named to "Battery" etc. [true/false]
+RemoveDlcNaming=true
+;
+; TODO add further global settings
+;
+; ------------------------------------------------------
+; -------------------Block Settings---------------------
+; ------------------------------------------------------
+; Write your wanted tags behind every block group the way you like it
+; Some groups combine other groups, e.g. "Large Cargoes" and "Small Cargoes" are also part of "All Cargoes".
+; The settings work for all, however more specific groups overwrite the settings of less specific groups
+; If "show on HUD" is on for "All Cargoes", but not for "Small Cargoes", it is set on for "Large Cargoes" and "Medium Cargoes", but not for "Small Cargoes"
+; TODO Is "All Cargoes" only useful for groups? If so, think maybe of a smoother way.
+;
+; -------------------Production Blocks------------------
+Refineries=GICN
+Assembler=GICN
+H2/O2 Generator=GIC
+; -------------------Cargo Blocks-----------------------
+Large Cargoes=GICN
+Medium Caroes=GICN
+Small Cargoes=GIC
+; -------------------Storage Tanks----------------------
+; All Tanks=
+; All H2 Tanks=
+; Large H2 Tanks=
+; Small H2 Tanks=
+; O2 Tanks=
