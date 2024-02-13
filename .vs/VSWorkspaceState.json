@@ -2,12 +2,8 @@
   "ExpandedNodes": [
     "",
     "\\Breaking Script",
-    "\\Breaking Script\\Breaking Script",
-    "\\Important_Messages\\Important_Messages",
-    "\\Renaming_Script",
-    "\\ScriptTests\\IngameScript1",
     "\\Solar Rotor Script\\Solar Rotor Script"
   ],
-  "SelectedNode": "\\Renaming_Script\\Program.cs",
+  "SelectedNode": "\\Renaming_Script",
   "PreviewInSolutionExplorer": false
 }
