@@ -67,17 +67,49 @@ namespace IngameScript
             // needed.
         }
 
+        List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
         public void Main(string argument, UpdateType updateSource)
         {
-            // The main entry point of the script, invoked every time
-            // one of the programmable block's Run actions are invoked,
-            // or the script updates itself. The updateSource argument
-            // describes where the update came from. Be aware that the
-            // updateSource is a  bitfield  and might contain more than 
-            // one update type.
-            // 
-            // The method itself is required, but the arguments above
-            // can be removed if not needed.
+            string Prefix = "(HRP) ";
+
+            GridTerminalSystem.GetBlocks(allBlocks);
+            for (int i = 0; i < allBlocks.Count; i++)
+            {
+                IMyTerminalBlock CurrentBlock = allBlocks[i];
+                string CurrentBlockName = CurrentBlock.DefinitionDisplayNameText;
+
+                if (CurrentBlockName.Contains("Industrial"))
+                {
+                    CurrentBlock.CustomName = Prefix + CurrentBlockName.Replace("Industrial ", "");
+                }
+                else if (CurrentBlockName.Contains("Sci-Fi"))
+                {
+                    CurrentBlock.CustomName = Prefix + CurrentBlockName.Replace("Sci-Fi ", "");
+                }
+                else if (CurrentBlockName.Contains("Warfare"))
+                {
+                    CurrentBlock.CustomName = Prefix + CurrentBlockName.Replace("Warfare ", "");
+                }
+                else if (CurrentBlockName.Contains("Wheel Suspension"))
+                {
+                    // SPECIAL CASE!!! Keeps the last name part "Right" and "Left"
+                    string[] parts = CurrentBlockName.Split(' ');
+                    CurrentBlock.CustomName = Prefix + "Wheel - " + parts[parts.Length - 1];
+                }
+                else
+                {
+                    CurrentBlock.CustomName = Prefix + CurrentBlockName;
+                }
+
+                if (CurrentBlockName.Contains("Large"))
+                {
+                    CurrentBlock.CustomName = CurrentBlock.CustomName.Replace("Large ", "") + " (Large)";
+                }
+                else if (CurrentBlockName.Contains("Small"))
+                {
+                    CurrentBlock.CustomName = CurrentBlock.CustomName.Replace("Small ", "") + " (Small)";
+                }
+            }
         }
     }
 }
