@@ -70,6 +70,7 @@ namespace IngameScript
         List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
         public void Main(string argument, UpdateType updateSource)
         {
+            Echo("This is working!");
             string Prefix = "(HRP) ";
 
 
