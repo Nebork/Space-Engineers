@@ -1,3 +1,4 @@
 Renaming_Script/*
+.vs
 
-!Renaming_Script/Program.cs
+!Renaming_Script/Renaming_Script/Program.cs
