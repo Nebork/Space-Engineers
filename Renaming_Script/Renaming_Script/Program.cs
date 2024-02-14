@@ -72,7 +72,7 @@ namespace IngameScript
         }
 
         // Converts an int to a roman number as string
-        public string intToRoman(int number)
+        public string IntToRoman(int number)
         {
             string output = "";
             int[] numberLimits = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
@@ -105,7 +105,7 @@ namespace IngameScript
             }
             else
             {
-                targetName += " " + intToRoman(number);
+                targetName += " " + IntToRoman(number);
             }
             
 
