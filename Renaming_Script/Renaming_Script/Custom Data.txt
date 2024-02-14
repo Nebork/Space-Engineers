@@ -23,14 +23,20 @@
 ; ------------------------------------------------------
 
 ; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
-Prefix=(HRP)
-Postfix=
+Prefix = (HRP)
+Postfix = 
 
 ; Decides if all connected grids should be named and set in unison to this grid. [true/false]
-WorkOnSubgrids=false
+WorkOnSubgrids = false
 
 ; Removes DLC block naming. "Warfare Battery" is named to "Battery" etc. [true/false]
-RemoveDlcNaming=true
+RemoveDlcNaming = true
+
+; If true, adds leading zeros to numberings if the number of items is greater than 10. Leads to better sorting in terminal. [true/false]
+LeadingZeros = true
+
+; If true, converts all numbering to roman numerals. Overwrites LeadingZeros. [true/false]
+RomanNumerals = false
 
 ; TODO add further global settings
 
@@ -43,16 +49,18 @@ RemoveDlcNaming=true
 ; If "show on HUD" is on for "All Cargoes", but not for "Small Cargoes", it is set on for "Large Cargoes" and "Medium Cargoes", but not for "Small Cargoes"
 
 ; -------------------Production Blocks------------------
-Refineries=ICN
-Assembler=ICN
-H2/O2 Generator=IC
+Refineries = ICN
+Assembler = ICN
+H2/O2 Generator = IC
 ; -------------------Cargo Blocks-----------------------
-Large Cargoes=ICN
-Medium Caroes=ICN
-Small Cargoes=IC
+Large Cargoes = ICN
+Medium Caroes = ICN
+Small Cargoes = IC
 ; -------------------Storage Tanks----------------------
-; All Tanks=
-; All H2 Tanks=
-; Large H2 Tanks=
-; Small H2 Tanks=
-; O2 Tanks=
+; All Tanks = 
+; All H2 Tanks = 
+; Large H2 Tanks = 
+; Small H2 Tanks = 
+; O2 Tanks = 
+
+Misc = 

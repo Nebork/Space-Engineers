@@ -49,12 +49,16 @@ namespace IngameScript
         string _postfix;
         bool _workOnSubgrids;  // TODO ADD
         bool _removeDlcNaming;
+        bool _leadingZeros;
+        bool _romanNumerals;
 
         string _refineries;
         string _assembler;
         string _h2_O2_Generator;
 
-        // "stolen", try to understand what's happening here
+        string _misc;
+
+        // "stolen"/found, try to understand what's happening here. From the DC, is in MMI.
         bool AddIfType<T>(IMyTerminalBlock block, List<T> list)
         where T : class, IMyTerminalBlock
         {
@@ -65,6 +69,47 @@ namespace IngameScript
                 list.Add(cast);
             }
             return isType;
+        }
+
+        // Converts an int to a roman number as string
+        public string intToRoman(int number)
+        {
+            string output = "";
+            int[] numberLimits = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+            string[] romanLimits = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
+
+            for (int i = 0; i < numberLimits.Length; i++)
+            {
+                while (number >= numberLimits[i])
+                {
+                    number -= numberLimits[i];
+                    output += romanLimits[i];
+                }
+            }
+            return output;
+        }
+
+        public string AddNumbering(string name, int number, int maxNumber)
+        {
+            string targetName = name;
+            int numberOfZeros = 0;
+
+            if (!_romanNumerals)
+            {
+                if (_leadingZeros)
+                {
+                    numberOfZeros = (int)Math.Log10(maxNumber) - (int)Math.Log10(number);
+                }
+
+                targetName += " " + String.Concat(Enumerable.Repeat("0", numberOfZeros)) + number;
+            }
+            else
+            {
+                targetName += " " + intToRoman(number);
+            }
+            
+
+            return targetName;
         }
 
         public void Rename<T>(List<T> blocks, string operations)
@@ -85,8 +130,7 @@ namespace IngameScript
 
                 if (operations.Contains("N"))
                 {
-                    targetName += " ";
-                    targetName += (i + 1);
+                    targetName = AddNumbering(targetName, i + 1, blocks.Count);
                 }
 
                 if (_prefix != "")
@@ -113,10 +157,14 @@ namespace IngameScript
             _postfix = _ini.Get("Nebork's Renaming Script", "Postfix").ToString();
             _workOnSubgrids = _ini.Get("Nebork's Renaming Script", "WorkOnSubgrids").ToBoolean();
             _removeDlcNaming = _ini.Get("Nebork's Renaming Script", "RemoveDlcNaming").ToBoolean();
+            _leadingZeros = _ini.Get("Nebork's Renaming Script", "leadingZeros").ToBoolean();
+            _romanNumerals = _ini.Get("Nebork's Renaming Script", "RomanNumerals").ToBoolean();
 
             _refineries = _ini.Get("Nebork's Renaming Script", "Refineries").ToString();
             _assembler = _ini.Get("Nebork's Renaming Script", "Assembler").ToString();
             _h2_O2_Generator = _ini.Get("Nebork's Renaming Script", "H2/O2 Generator").ToString();
+
+            _misc = _ini.Get("Nebork's Renaming Script", "Misc").ToString();
             // TODO ADD ALL
 
         }
@@ -149,6 +197,8 @@ namespace IngameScript
             Rename(refineries, _refineries);
             Rename(assembler, _assembler);
             Rename(h2_O2_Generator, _h2_O2_Generator);
+
+            Rename(misc, _misc);
         }
     }
 }
