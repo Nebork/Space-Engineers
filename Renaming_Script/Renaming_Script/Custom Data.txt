@@ -22,6 +22,12 @@
 ; -------------------Global Settings--------------------
 ; ------------------------------------------------------
 
+; Defines the name of the grid which shall be renamed. If empty uses the grid of this programmable block.
+GridName = 
+
+; Decides if all subgrids shall be renamed uniformely. USE WITH CAUTION! [true/false]
+WorkOnSubgrids = false
+
 ; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
 Prefix = (HRP)
 Postfix = 
