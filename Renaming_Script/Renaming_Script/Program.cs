@@ -45,7 +45,8 @@ namespace IngameScript
 
         MyIni _ini = new MyIni();
 
-        string _gridname;
+        // Define the variables used for the custom data.
+        string _gridName;
         string _prefix;
         string _postfix;
         bool _workOnSubgrids;
@@ -151,17 +152,18 @@ namespace IngameScript
             // return false if the source wasn't compatible with the parser.
             MyIniParseResult result;
             if (!_ini.TryParse(Me.CustomData, out result))
+            {
                 throw new Exception(result.ToString());
-
+            }
+            
             // Get all variables from the ini/custom data
-            _gridname = _ini.Get("Nebork's Renaming Script", "GridName").ToString();
+            _gridName = _ini.Get("Nebork's Renaming Script", "GridName").ToString();
+            _workOnSubgrids = _ini.Get("Nebork's Renaming Script", "WorkOnSubgrids").ToBoolean();
             _prefix = _ini.Get("Nebork's Renaming Script", "Prefix").ToString();
             _postfix = _ini.Get("Nebork's Renaming Script", "Postfix").ToString();
-            _workOnSubgrids = _ini.Get("Nebork's Renaming Script", "WorkOnSubgrids").ToBoolean();
             _removeDlcNaming = _ini.Get("Nebork's Renaming Script", "RemoveDlcNaming").ToBoolean();
             _leadingZeros = _ini.Get("Nebork's Renaming Script", "LeadingZeros").ToBoolean();
             _romanNumerals = _ini.Get("Nebork's Renaming Script", "RomanNumerals").ToBoolean();
-            _workOnSubgrids = _ini.Get("Nebork's Renaming Script", "WorkOnSubgrids").ToBoolean();
 
             _refineries = _ini.Get("Nebork's Renaming Script", "Refineries").ToString();
             _assembler = _ini.Get("Nebork's Renaming Script", "Assembler").ToString();
@@ -175,12 +177,13 @@ namespace IngameScript
         public void Main(string argument, UpdateType updateSource)
         {
 
-            if (_gridname == "")
+            if (_gridName == "")
             {
-                _gridname = Me.CubeGrid.CustomName;
+                _gridName = Me.CubeGrid.CustomName;
             }
 
             List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
+            List<IMyTerminalBlock> allGridBlocks = new List<IMyTerminalBlock>();
 
             List<IMyRefinery> refineries = new List<IMyRefinery>();
             List<IMyAssembler> assembler = new List<IMyAssembler>();
@@ -192,18 +195,21 @@ namespace IngameScript
             GridTerminalSystem.GetBlocks(allBlocks);
             foreach (IMyTerminalBlock block in allBlocks)
             {
-                if ((_workOnSubgrids || block.CubeGrid.CustomName == _gridname)  // Only adds blocks of the wanted grids
-                && AddIfType(block, refineries)
-                || AddIfType(block, assembler)
-                || AddIfType(block, h2_O2_Generator))
+                if(_workOnSubgrids || block.CubeGrid.CustomName == _gridName)  // Only adds blocks of the wanted grids
                 {
-                    // IS already added by the AddIfType,
-                    allBlocks.Add(block);
-                }
-                else
-                {
-                    misc.Add(block);
-                    allBlocks.Add(block);
+                    if (
+                    AddIfType(block, refineries)
+                    || AddIfType(block, assembler)
+                    || AddIfType(block, h2_O2_Generator))
+                    {
+                        // IS already added by the AddIfType,
+                        allGridBlocks.Add(block);
+                    }
+                    else
+                    {
+                        misc.Add(block);
+                        allGridBlocks.Add(block);
+                    }
                 }
             }
 

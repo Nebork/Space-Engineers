@@ -25,15 +25,13 @@
 ; Defines the name of the grid which shall be renamed. If empty uses the grid of this programmable block.
 GridName = 
 
-; Decides if all subgrids shall be renamed uniformely. USE WITH CAUTION! [true/false]
+; Decides if all subgrids shall be renamed uniformely. [true/false]
+USE WITH CAUTION!
 WorkOnSubgrids = false
 
 ; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
 Prefix = (HRP)
 Postfix = 
-
-; Decides if all connected grids should be named and set in unison to this grid. [true/false]
-WorkOnSubgrids = false
 
 ; Removes DLC block naming. "Warfare Battery" is named to "Battery" etc. [true/false]
 RemoveDlcNaming = true
