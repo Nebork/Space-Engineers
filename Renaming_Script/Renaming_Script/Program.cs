@@ -213,6 +213,12 @@ namespace IngameScript
                 }
             }
 
+            if (allGridBlocks.Count == 0)
+            {
+                // TODO add a warning, "There are no blocks on the given grid", add gridname.
+                return;
+            }
+
             Rename(refineries, _refineries);
             Rename(assembler, _assembler);
             Rename(h2_O2_Generator, _h2_O2_Generator);
