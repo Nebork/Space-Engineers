@@ -1,9 +1,14 @@
-Renaming_Script/*
-Renaming_Script/Renaming_Script/*
-
 Space-Engineers/.vs 
 .vs/
 
+Renaming_Script/*
+Renaming_Script/Renaming_Script/*
 !Renaming_Script/Renaming_Script
 !Renaming_Script/Renaming_Script/Program.cs
 !Renaming_Script/Renaming_Script/Custom Data.txt
+
+Party_Light_Script/*
+Party_Light_Script/Party_Light_Script/*
+!Party_Light_Script/Party_Light_Script
+!Party_Light_Script/Party_Light_Script/Program.cs
+!Party_Light_Script/Party_Light_Script/Custom Data.txt
