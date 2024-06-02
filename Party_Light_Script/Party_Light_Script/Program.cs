@@ -43,28 +43,67 @@ namespace IngameScript
         //
         // to learn more about ingame scripts.
 
+        // COPY FROM HERE
+
+        Color color = new Color();
+        Random rnd = new Random();
+        IMyLightingBlock light;
+        string name;
+
         public Program()
         {
-            // The constructor, called only once every session and
-            // always before any other method is called. Use it to
-            // initialize your script. 
-            //     
-            // The constructor is optional and can be removed if not
-            // needed.
-            // 
-            // It's recommended to set Runtime.UpdateFrequency 
-            // here, which will allow your script to run itself without a 
-            // timer block.
+            Runtime.UpdateFrequency = UpdateFrequency.Update1;
+            name = "[CRG] Rotating Light - Party Nebork";
+            light = GridTerminalSystem.GetBlockWithName(name) as IMyLightingBlock;
+
+            if (light == null)
+            {
+                Echo($"Could not find light with name {name}");
+                Runtime.UpdateFrequency = UpdateFrequency.None;
+                return;
+            }
+
+            color.R = 255;
+            color.G = 0;
+            color.B = 255;
+            light.Color = color;
         }
 
-        public void Save()
+        public Color NextColor(Color startColor)
         {
-            // Called when the program needs to save its state. Use
-            // this method to save your state to the Storage field
-            // or some other means. 
-            // 
-            // This method is optional and can be removed if not
-            // needed.
+            const int step = 1; // 15 or 17 for UpdateFrequency.Update10
+
+            if (startColor.R > 0 && startColor.G == 0 && startColor.B == 255)
+            {
+                startColor.R -= step;
+                return startColor;
+            }
+            else if (startColor.R == 0 && startColor.G < 255 && startColor.B == 255)
+            {
+                startColor.G += step;
+                return startColor;
+            }
+            else if (startColor.R == 0 && startColor.G == 255 && startColor.B > 0)
+            {
+                startColor.B -= step;
+                return startColor;
+            }
+            else if (startColor.R < 255 && startColor.G == 255 && startColor.B == 0)
+            {
+                startColor.R += step;
+                return startColor;
+            }
+            else if (startColor.R == 255 && startColor.G > 0 && startColor.B == 0)
+            {
+                startColor.G -= step;
+                return startColor;
+            }
+            else if (startColor.R == 255 && startColor.G == 0 && startColor.B < 255)
+            {
+                startColor.B += step;
+                return startColor;
+            }
+            else return startColor;
         }
 
         public void Main(string argument, UpdateType updateSource)
@@ -78,6 +117,16 @@ namespace IngameScript
             // 
             // The method itself is required, but the arguments above
             // can be removed if not needed.
+
+            // For random
+            // color.R = (byte)rnd.Next(256);
+            // color.G = (byte)rnd.Next(256);
+            // color.B = (byte)rnd.Next(256);
+
+            color = light.Color;
+            color = NextColor(color);
+            light.Color = color;
         }
+        // COPY UNTIL HERE
     }
 }
