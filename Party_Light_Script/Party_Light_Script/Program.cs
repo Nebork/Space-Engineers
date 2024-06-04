@@ -24,8 +24,17 @@ namespace IngameScript
     {
         // COPY FROM HERE
 
-        Random rnd = new Random();
-        string groupName;
+        /*
+        Nebork's Party Light Script
+
+        This script can smoothly change the color of all lights in the given group. First they are randomized and then change.
+        */
+        readonly string groupName = "[CRG] - Party";
+
+        // Any changes made below the following line are made on your own risk!
+        // --------------------------------------------------------------------------------------------------------
+
+
         IMyBlockGroup partyGroup;
         List<IMyLightingBlock> partyLights;
 
@@ -35,7 +44,6 @@ namespace IngameScript
 
 
             // Gets a list of the blocks in the group groupName
-            groupName = "[CRG] - Party";
             partyGroup = GridTerminalSystem.GetBlockGroupWithName(groupName);
 
             // Checks if the group is empty, thus no group has been found (empty list if no blocks in group). Stops whole script
@@ -46,12 +54,12 @@ namespace IngameScript
                 return;
             }
 
-            // Fetches all the blocks in partyGroup from class IMyLightingBlock into partyLights  TODO CHECK
+            // Fetches all the blocks in partyGroup from class IMyLightingBlock into partyLights
             partyLights = new List<IMyLightingBlock>();
             partyGroup.GetBlocksOfType<IMyLightingBlock>(partyLights);
 
-            // Checks if there are any blocks in partyLights, else stop the whole script  TODO CHECK
-            if (partyLights == null)
+            // Checks if there are any blocks in partyLights, else stop the whole script
+            if (partyLights.Count == 0)
             {
                 Echo($"Could not find any lights in the \"{groupName}\" group!");
                 Runtime.UpdateFrequency = UpdateFrequency.None;
@@ -61,8 +69,10 @@ namespace IngameScript
             // Give every light a random and valid color. (one RGB value is 0, another one 255, and the last is random from 0-255)
             foreach (var partyLight in partyLights)
             {
-                partyLight.Color = RandomValidColor();
+                partyLight.Color = RandomValidColor(partyLight.Color);
             }
+
+            Echo("");  //flushes previous messages. If this is executed program should work properly
         }
 
 
@@ -71,8 +81,9 @@ namespace IngameScript
         // This reduction removed all edges connecting to (0,0,0) and (255,255,255) to ensure colorfulness
         public Color NextColor(Color startColor)
         {
-            const int stepsize = 1; // 15 or 17 for UpdateFrequency.Update10
+            const int stepsize = 1;
 
+            // TODO VALUE -= stepSize + value%stepsize, - if += before
             if (startColor.R > 0 && startColor.G == 0 && startColor.B == 255)
             {
                 startColor.R -= stepsize;
@@ -103,60 +114,63 @@ namespace IngameScript
                 startColor.B += stepsize;
                 return startColor;
             }
-            else return startColor;
+            else
+            {
+                Echo("Could not change Color!");
+                return startColor;
+            }
         }
 
 
         // Gives back a random and valid color
         // A valid color in this case is any color, where exactly one value is 0, another one is 255 and the last is random from 0-255
         // This is to ensure the color is on a edge of the RGB cube, which is not connected to black or white ((0,0,0) and (255,255,255)) to ensure colorfullness
-        public Color RandomValidColor()
+        public Color RandomValidColor(Color previousColor)
         {
+            Random rnd = new Random();
+
             int randomNmbr = rnd.Next(6);
 
             byte x = (byte) rnd.Next(256);
 
-            Color rndColor = new Color();
-
-            // TODO get rid of the switch. Use a random permutation of (0,x,255) and give RGB each one of the values.
-            switch (randomNmbr)  
+            switch (randomNmbr)
             {
                 case 0:
-                    rndColor.R = x;
-                    rndColor.G = 0;
-                    rndColor.B = 255;
+                    previousColor.R = x;
+                    previousColor.G = 0;
+                    previousColor.B = 255;
                     break;
                 case 1:
-                    rndColor.R = 0;
-                    rndColor.G = x; ;
-                    rndColor.B = 255;
+                    previousColor.R = 0;
+                    previousColor.G = x;
+                    previousColor.B = 255;
                     break;
                 case 2:
-                    rndColor.R = 0;
-                    rndColor.G = 255;
-                    rndColor.B = x; ;
+                    previousColor.R = 0;
+                    previousColor.G = 255;
+                    previousColor.B = x;
                     break;
                 case 3:
-                    rndColor.R = x; ;
-                    rndColor.G = 255;
-                    rndColor.B = 0;
+                    previousColor.R = x;
+                    previousColor.G = 255;
+                    previousColor.B = 0;
                     break;
                 case 4:
-                    rndColor.R = 255;
-                    rndColor.G = x;
-                    rndColor.B = 0;
+                    previousColor.R = 255;
+                    previousColor.G = x;
+                    previousColor.B = 0;
                     break;
                 case 5:
-                    rndColor.R = 255;
-                    rndColor.G = 0;
-                    rndColor.B = x;
+                    previousColor.R = 255;
+                    previousColor.G = 0;
+                    previousColor.B = x;
                     break;
             }
 
-            return rndColor;
+            return previousColor;
         }
 
-        public void Main(string argument, UpdateType updateSource)
+        public void Main(/*string argument, UpdateType updateSource*/)
         {
             foreach (var partyLight in partyLights)
             {
