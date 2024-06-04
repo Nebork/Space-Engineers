@@ -34,64 +34,82 @@ namespace IngameScript
             Runtime.UpdateFrequency = UpdateFrequency.Update1;
 
 
-            // Takes all the lights from the group and puts them into the list "partyLights"
+            // Gets a list of the blocks in the group groupName
             groupName = "[CRG] - Party";
             partyGroup = GridTerminalSystem.GetBlockGroupWithName(groupName);
+
+            // Checks if the group is empty, thus no group has been found (empty list if no blocks in group). Stops whole script
+            if (partyGroup == null)
+            {
+                Echo($"Could not find a group with name \"{groupName}\"!");
+                Runtime.UpdateFrequency = UpdateFrequency.None;
+                return;
+            }
+
+            // Fetches all the blocks in partyGroup from class IMyLightingBlock into partyLights  TODO CHECK
             partyLights = new List<IMyLightingBlock>();
             partyGroup.GetBlocksOfType<IMyLightingBlock>(partyLights);
 
+            // Checks if there are any blocks in partyLights, else stop the whole script  TODO CHECK
+            if (partyLights == null)
+            {
+                Echo($"Could not find any lights in the \"{groupName}\" group!");
+                Runtime.UpdateFrequency = UpdateFrequency.None;
+                return;
+            }
+
+            // Give every light a random and valid color. (one RGB value is 0, another one 255, and the last is random from 0-255)
             foreach (var partyLight in partyLights)
             {
                 partyLight.Color = RandomValidColor();
             }
-
-
-            // CHANGE TO EMPTY GROUP AND NO LIGHTS IN GROUP
-            /*if (light == null)
-            {
-                Echo($"Could not find light with name {name}");
-                Runtime.UpdateFrequency = UpdateFrequency.None;
-                return;
-            }*/
         }
 
+
+        // Returns a color, which is close to the given startColor. This is to ensure a smooth transition between the colors.
+        // The color choosen is based on an euler-circle along the edges of a reduced RGB cube.
+        // This reduction removed all edges connecting to (0,0,0) and (255,255,255) to ensure colorfulness
         public Color NextColor(Color startColor)
         {
-            const int step = 1; // 15 or 17 for UpdateFrequency.Update10
+            const int stepsize = 1; // 15 or 17 for UpdateFrequency.Update10
 
             if (startColor.R > 0 && startColor.G == 0 && startColor.B == 255)
             {
-                startColor.R -= step;
+                startColor.R -= stepsize;
                 return startColor;
             }
             else if (startColor.R == 0 && startColor.G < 255 && startColor.B == 255)
             {
-                startColor.G += step;
+                startColor.G += stepsize;
                 return startColor;
             }
             else if (startColor.R == 0 && startColor.G == 255 && startColor.B > 0)
             {
-                startColor.B -= step;
+                startColor.B -= stepsize;
                 return startColor;
             }
             else if (startColor.R < 255 && startColor.G == 255 && startColor.B == 0)
             {
-                startColor.R += step;
+                startColor.R += stepsize;
                 return startColor;
             }
             else if (startColor.R == 255 && startColor.G > 0 && startColor.B == 0)
             {
-                startColor.G -= step;
+                startColor.G -= stepsize;
                 return startColor;
             }
             else if (startColor.R == 255 && startColor.G == 0 && startColor.B < 255)
             {
-                startColor.B += step;
+                startColor.B += stepsize;
                 return startColor;
             }
             else return startColor;
         }
 
+
+        // Gives back a random and valid color
+        // A valid color in this case is any color, where exactly one value is 0, another one is 255 and the last is random from 0-255
+        // This is to ensure the color is on a edge of the RGB cube, which is not connected to black or white ((0,0,0) and (255,255,255)) to ensure colorfullness
         public Color RandomValidColor()
         {
             int randomNmbr = rnd.Next(6);
@@ -100,7 +118,8 @@ namespace IngameScript
 
             Color rndColor = new Color();
 
-            switch(randomNmbr)
+            // TODO get rid of the switch. Use a random permutation of (0,x,255) and give RGB each one of the values.
+            switch (randomNmbr)  
             {
                 case 0:
                     rndColor.R = x;
