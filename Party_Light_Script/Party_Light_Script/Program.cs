@@ -28,20 +28,25 @@ namespace IngameScript
         Nebork's Party Light Script
 
         This script can smoothly change the color of all lights in the given group. First they are randomized and then change.
+        If new lights are added to the group, or the group was renamed, please recompile the programmable block
         */
-        readonly string groupName = "[CRG] - Party";
+
+        readonly string groupName = "[PARTY] Party";  // Rename this to the EXACT name of the group containing the lights.
+        const int stepsize = 10;  // The speed of the color change. The higher, the faster the color change. Values over 10 might not be smooth.
+
 
         // Any changes made below the following line are made on your own risk!
         // --------------------------------------------------------------------------------------------------------
 
 
+        // Global Definitions
         IMyBlockGroup partyGroup;
         List<IMyLightingBlock> partyLights;
 
+        // Main function that is run, every time the block is recompiled
         public Program()
         {
-            Runtime.UpdateFrequency = UpdateFrequency.Update1;
-
+            Runtime.UpdateFrequency = UpdateFrequency.Update10;
 
             // Gets a list of the blocks in the group groupName
             partyGroup = GridTerminalSystem.GetBlockGroupWithName(groupName);
@@ -81,37 +86,34 @@ namespace IngameScript
         // This reduction removed all edges connecting to (0,0,0) and (255,255,255) to ensure colorfulness
         public Color NextColor(Color startColor)
         {
-            const int stepsize = 1;
-
-            // TODO VALUE -= stepSize + value%stepsize, - if += before
             if (startColor.R > 0 && startColor.G == 0 && startColor.B == 255)
             {
-                startColor.R -= stepsize;
+                startColor.R -= (byte)(startColor.R % stepsize == 0 ? stepsize : startColor.R % stepsize);  // ensures that after the FIRST change, 0 is reached in x steps
                 return startColor;
             }
             else if (startColor.R == 0 && startColor.G < 255 && startColor.B == 255)
             {
-                startColor.G += stepsize;
+                startColor.G += (byte)((255 - startColor.G) % stepsize == 0 ? stepsize : (255 - startColor.G) % stepsize);  // same as above with 255 in x steps
                 return startColor;
             }
             else if (startColor.R == 0 && startColor.G == 255 && startColor.B > 0)
             {
-                startColor.B -= stepsize;
+                startColor.B -= (byte)(startColor.B % stepsize == 0 ? stepsize : startColor.B % stepsize);
                 return startColor;
             }
             else if (startColor.R < 255 && startColor.G == 255 && startColor.B == 0)
             {
-                startColor.R += stepsize;
+                startColor.R += (byte)((255 - startColor.R) % stepsize == 0 ? stepsize : (255 - startColor.R) % stepsize);
                 return startColor;
             }
             else if (startColor.R == 255 && startColor.G > 0 && startColor.B == 0)
             {
-                startColor.G -= stepsize;
+                startColor.G -= (byte)(startColor.G % stepsize == 0 ? stepsize : startColor.G % stepsize);
                 return startColor;
             }
             else if (startColor.R == 255 && startColor.G == 0 && startColor.B < 255)
             {
-                startColor.B += stepsize;
+                startColor.B += (byte)((255 - startColor.B) % stepsize == 0 ? stepsize : (255 - startColor.B) % stepsize);
                 return startColor;
             }
             else
@@ -170,6 +172,7 @@ namespace IngameScript
             return previousColor;
         }
 
+        // Main functions that runs every time the script is either run by hand, any block action OR via the UpdateFrequency property
         public void Main(/*string argument, UpdateType updateSource*/)
         {
             foreach (var partyLight in partyLights)
