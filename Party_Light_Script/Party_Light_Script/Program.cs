@@ -43,6 +43,8 @@ namespace IngameScript
         IMyBlockGroup partyGroup;
         List<IMyLightingBlock> partyLights;
 
+        Random rnd = new Random();
+
         // Main function that is run, every time the block is recompiled
         public Program()
         {
@@ -129,7 +131,6 @@ namespace IngameScript
         // This is to ensure the color is on a edge of the RGB cube, which is not connected to black or white ((0,0,0) and (255,255,255)) to ensure colorfullness
         public Color RandomValidColor(Color previousColor)
         {
-            Random rnd = new Random();
 
             int randomNmbr = rnd.Next(6);
 
