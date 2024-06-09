@@ -37,7 +37,7 @@ namespace IngameScript
         readonly string cockpitName = "";  // Name of cockpit, if empty uses the current main cockpit
         const int display = 2;  // Index number of display in cockpit, starting from 0
 
-        readonly bool showSafeDistance = false;  // true, if you want the safe distance to be shown, false otherwise
+        readonly bool showSafeDistance = false;  // true, if you want the safe distance to be shown instead, false otherwise
         readonly double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
 
         readonly bool showOnLcd = false;  // true, if you want the results shown in an LCD instead of the cockpit  TODO add LCD support
@@ -63,15 +63,15 @@ namespace IngameScript
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
             Echo("");  // Flushes previous messages
 
-            if(Me.CubeGrid.IsStatic)  // if grid is a station, terminate program
+            if(Me.CubeGrid.IsStatic)  // If grid is a station terminate program
             {
                 Echo("This grid is a station! \n Please recompile.");
                 Runtime.UpdateFrequency = UpdateFrequency.None;
                 return;
             }
 
-            // whole code block finds the given cockpit or the only main cockpit
-            if(cockpitName == "")  // if no cockpit name given, search for main cockpit
+            // Whole code block finds the given cockpit or the only main cockpit
+            if(cockpitName == "")  // If no cockpit name given, search for main cockpit
             {
                 GridTerminalSystem.GetBlocksOfType<IMyCockpit>(cockpits);
                 if (cockpits == null)
@@ -185,7 +185,7 @@ namespace IngameScript
             if (showSafeDistance) { output += $"{(int) (distance * safetyProportion)} meters for a save stop \n"; }
             else { output += $"{distance} meters for to full stop \n"; }
 
-            debugText += $"{distance} meters for to full stop \n";
+            debugText += $"{distance} meters for a full stop \n";
             debugText += $"{(int) distance * safetyProportion} meters for a save stop \n";
 
             // If debug is on
