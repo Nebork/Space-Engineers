@@ -26,7 +26,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Breaking_Distance_Script
+        Nebork's Breaking Distance Script
 
         This script calculates and shows the required time and distance to come to a full stop with the current ship.
         This is intended to be used for larger space vessels who might carry heavy load, e.g. miners and haulers.
