@@ -34,12 +34,13 @@ namespace IngameScript
         The scipt only takes forward thrusters into account, thus you do not need to rotate your ship or anything else to achieve the breaking distance.
         */
 
-        readonly bool show_in_cockpit = true;  // true, if you want the results shown in your cockpit  TODO add LCD support
-        readonly string cockpitName = "";  // Name of cockpit, if empty 
-        const int display = 2;  // Display number in cockpit
+        readonly string cockpitName = "";  // Name of cockpit, if empty uses the current main cockpit
+        const int display = 2;  // Index number of display in cockpit, starting from 0
 
-        readonly bool show_safeDistance = false;  // true, if you want the safe distance to be shown, false otherwise
-        double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
+        readonly bool showSafeDistance = false;  // true, if you want the safe distance to be shown, false otherwise
+        readonly double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
+
+        readonly bool showOnLcd = false;  // true, if you want the results shown in an LCD instead of the cockpit  TODO add LCD support
 
 
         // Any changes made below the following line are made on your own risk!
@@ -49,18 +50,18 @@ namespace IngameScript
         // Variables
         readonly bool debugMode = false;  // If true outputs the debugText instead of the output
 
-        List<IMyCockpit> cockpits = new List<IMyCockpit>();
-        IMyCockpit mainCockpit;
+        readonly List<IMyCockpit> cockpits = new List<IMyCockpit>();
+        readonly IMyCockpit mainCockpit;
+
+        readonly IMyTextSurface cockpitSurface;
+
+        readonly List<IMyThrust> thrusters = new List<IMyThrust>();
 
 
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
-            // surface.ContentType = ContentType.TEXT_AND_IMAGE;  //TODO put all the objects up here
-            // surface.Alignment = TextAlignment.CENTER;
-
             Echo("");  // Flushes previous messages
-
 
             if(Me.CubeGrid.IsStatic)  // if grid is a station, terminate program
             {
@@ -69,7 +70,7 @@ namespace IngameScript
                 return;
             }
 
-            // whole block finds the given cockpit or the only main cockpit
+            // whole code block finds the given cockpit or the only main cockpit
             if(cockpitName == "")  // if no cockpit name given, search for main cockpit
             {
                 GridTerminalSystem.GetBlocksOfType<IMyCockpit>(cockpits);
@@ -99,64 +100,68 @@ namespace IngameScript
             }
             else
             {
-                mainCockpit = (IMyCockpit)GridTerminalSystem.GetBlockWithName(cockpitName);
+                // Checks if the found name is actually a cockpit
+                IMyTerminalBlock typeCheckBlock = GridTerminalSystem.GetBlockWithName(cockpitName);
+                if (typeCheckBlock.GetType() == typeof(IMyCockpit)) { mainCockpit = (IMyCockpit)typeCheckBlock; }
+                else
+                {
+                    Echo($"{cockpitName} is not a cockpit! \n Please recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
+                }
+
                 if (mainCockpit == null)
                 {
-                    Echo($"There is no cockpit with the name \"{mainCockpit}\"! \n Please recompile.");
+                    Echo($"There is no cockpit with the name \"{cockpitName}\"! \n Please recompile.");
                     Runtime.UpdateFrequency = UpdateFrequency.None;
                     return;
                 }
             }
-            
+
+            // Shows everything in the cockpit
+            if (!showOnLcd)
+            {
+                cockpitSurface = mainCockpit.GetSurface(display);
+                if (cockpitSurface == null)
+                {
+                    Echo($"There is no display in \"{mainCockpit.CustomName}\"! \n Please recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
+                }
+
+                cockpitSurface.ContentType = ContentType.TEXT_AND_IMAGE;
+                cockpitSurface.Alignment = TextAlignment.CENTER;
+            }
+
+            GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters);
         }
 
         public void Main(/*string argument, UpdateType updateSource*/)
         {
-
             double speed;  // speed in m/s
             double totalMass;  // mass in Kg
             double force = 0;  // force in N
             double accerlation;  // accerlation in m/s^2
             double time;  // time in s
             double distance;  // distance in m
-            double safeDistance;  // distance * safetyProportion in m
             string output = "";  // output text
             string debugText = "";  // debug text, which is used to show all values for debug
 
-            // Initializes lists of all cockpits and thrusters
-            IMyCockpit cockpit = null;
 
-            for (int i = 0; i < cockpits.Count; i++)  // TODO simplify, used in light script a way to find block of name, look up in MDK
-            {
-                if (cockpits[i].CustomName == cockpitName)
-                {
-                    cockpit = cockpits[i];
-                }
-            }
-            if (cockpit == null)
-            {
-                Echo("There is no cockpit named " + cockpitName + " on this ship! \n");
-                Runtime.UpdateFrequency = UpdateFrequency.None;
-                return;
-            }
-            List<IMyThrust> thrusters = new List<IMyThrust>();
-            GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters);
-
-
+            // All the math stuff!
             // Calculates ship's mass
-            MyShipMass shipMass = cockpit.CalculateShipMass();
-            totalMass = (int)shipMass.TotalMass; // mass including inventory cargo
-                                                 // text = text + "Total Ship Weight: " + totalMass + "Kg \n";
+            MyShipMass shipMass = mainCockpit.CalculateShipMass();
+            totalMass = (int)shipMass.TotalMass;  // mass including inventory cargo in kg
+            debugText += "Total Ship Weight: " + totalMass + "Kg \n";
 
             // Calculates ship's speed
-            speed = Math.Round(cockpit.GetShipSpeed(), 3);
+            speed = Math.Round(mainCockpit.GetShipSpeed(), 3);
             debugText += "Ship Speed: " + speed + "m/s \n";
 
             // Calculates ship's force
-            for (int i = 0; i < thrusters.Count; i++)
+            foreach (IMyThrust thruster in thrusters)
             {
-                IMyThrust thruster = thrusters[i];
-                if (thruster.Orientation.ToString().Split(',')[0] == cockpit.Orientation.ToString().Split(',')[0])
+                if (thruster.Orientation.Forward == mainCockpit.Orientation.Forward)
                 {
                     force += thruster.MaxThrust;
                 }
@@ -175,39 +180,19 @@ namespace IngameScript
 
             // Calculates ship's distance to full stop
             distance = Math.Round((speed * time) / 2);
-            output += distance + " meters to full stop \n";
-            debugText += distance + " meters to full stop \n";
 
-            // If show_safeDistance is true calculates and shows safe distance to full stop
-            if (show_safeDistance)
-            {
-                if (safetyProportion < 1) { safetyProportion = 1; }
-                safeDistance = Math.Round(distance * safetyProportion, 1);
-                output += safeDistance + " for a save stop \n";
-                debugText += safeDistance + " for a save stop \n";
-            }
+            // Evaluates if true distance or safe distance should be shown
+            if (showSafeDistance) { output += $"{(int) (distance * safetyProportion)} meters for a save stop \n"; }
+            else { output += $"{distance} meters for to full stop \n"; }
+
+            debugText += $"{distance} meters for to full stop \n";
+            debugText += $"{(int) distance * safetyProportion} meters for a save stop \n";
 
             // If debug is on
-            if (debugMode) { Echo(debugText); }
+            if (debugMode) { Echo(debugText); } 
 
-            // Prints everything on the cockpits panel
-            if (show_in_cockpit)
-            {
-                IMyTextSurface surface = null;
-                try
-                {
-                    surface = cockpit.GetSurface(display);
-                }
-                catch (Exception e)
-                {
-                    Echo("there is no display with number " + display + "\n");
-                    Echo(e.ToString());
-                }
-
-                surface.ContentType = ContentType.TEXT_AND_IMAGE;  //TODO put all the objects up here
-                surface.Alignment = TextAlignment.CENTER;
-                surface.WriteText(output, false);
-            }
+            // Actual output in the cockpit
+            if (!showOnLcd) { cockpitSurface.WriteText(output, false); }
         }
 
         // COPY UNTIL HERE
