@@ -43,29 +43,37 @@ namespace IngameScript
         // Any changes made below the following line are made on your own risk!
         // --------------------------------------------------------------------------------------------------------
 
+
+        // Variables
+        readonly bool debugMode = false;  // If true outputs the debugText instead of the output
+        readonly double inaccuracyProportion = 1.00;  // additional distance to stop  TODO really needed?
+
+        double speed;  // speed in m/s
+        double totalMass;  // mass in Kg
+        double force;  // force in N
+        double accerlation;  // accerlation in m/s^2
+        double time;  // time in s
+        double distance;  // distance in m
+        double safeDistance;  // distance * safetyProportion in m
+        string output;  // output text
+        string debugText;  // debug text, which is used to show all values for debug
+
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
             // surface.ContentType = ContentType.TEXT_AND_IMAGE;  //TODO put all the objects up here
             // surface.Alignment = TextAlignment.CENTER;
+
+            if (Me.CubeGrid.IsStatic)
+            {
+                Echo("This grid is a station! \n");
+                Runtime.UpdateFrequency = UpdateFrequency.None;
+                return;
+            }
         }
 
         public void Main(/*string argument, UpdateType updateSource*/)
         {
-            double speed = 0;  // speed in m/s
-            double totalMass = 0;  // mass in Kg
-            double force = 0;  // force in N
-            double accerlation = 0;  // accerlation in m/s^2
-            double time = 0;  // time in s
-            double distance = 0;  // distance in m
-            double safeDistance = 0;  // distance * safetyProportion in m
-            string output = "";  // output text
-
-            bool debugMode = false;  // If true outputs the debugText instead of the output
-            string debugText = "";  // debug text, which is used to show all values for debug
-
-            double inaccuracyProportion = 1.00;  // additional distance to stop  TODO really needed?
-
 
             // Initializes lists of all cockpits and thrusters
             List<IMyCockpit> cockpits = new List<IMyCockpit>();
@@ -75,13 +83,6 @@ namespace IngameScript
             if (cockpits.Count == 0)
             {
                 Echo("There are no cockpits on this ship! \n");
-                Runtime.UpdateFrequency = UpdateFrequency.None;
-                return;
-            }
-
-            if(Me.CubeGrid.IsStatic)
-            {
-                Echo("This grid is a station! \n");
                 Runtime.UpdateFrequency = UpdateFrequency.None;
                 return;
             }
