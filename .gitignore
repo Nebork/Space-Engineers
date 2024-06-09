@@ -14,7 +14,7 @@ Party_Light_Script/Party_Light_Script/*
 !Party_Light_Script/Party_Light_Script/Custom Data.txt
 
 Breaking_Distance_Script/*
-Breaking_Distance_Script/Party_Light_Script/*
-!Breaking_Distance_Script/Party_Light_Script
-!Breaking_Distance_Script/Party_Light_Script/Program.cs
-!Breaking_Distance_Script/Party_Light_Script/Custom Data.txt
+Breaking_Distance_Script/Breaking_Distance_Script/*
+!Breaking_Distance_Script/Breaking_Distance_Script
+!Breaking_Distance_Script/Breaking_Distance_Script/Program.cs
+!Breaking_Distance_Script/Breaking_Distance_Script/Custom Data.txt
