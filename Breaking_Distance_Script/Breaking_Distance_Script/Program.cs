@@ -22,48 +22,36 @@ namespace IngameScript
 {
     partial class Program : MyGridProgram
     {
-        // This file contains your actual script.
-        //
-        // You can either keep all your code here, or you can create separate
-        // code files to make your program easier to navigate while coding.
-        //
-        // In order to add a new utility class, right-click on your project, 
-        // select 'New' then 'Add Item...'. Now find the 'Space Engineers'
-        // category under 'Visual C# Items' on the left hand side, and select
-        // 'Utility Class' in the main area. Name it in the box below, and
-        // press OK. This utility class will be merged in with your code when
-        // deploying your final script.
-        //
-        // You can also simply create a new utility class manually, you don't
-        // have to use the template if you don't want to. Just do so the first
-        // time to see what a utility class looks like.
-        // 
-        // Go to:
-        // https://github.com/malware-dev/MDK-SE/wiki/Quick-Introduction-to-Space-Engineers-Ingame-Scripts
-        //
-        // to learn more about ingame scripts.
 
-        (GROUND) BREAKING DISTANCE SCRIPT
+        /*
+        Nebork's Breaking_Distance_Script
+
+        This script calculates and shows the required time and distance to come to a full stop with the current ship.
+        This is intended to be used for larger space vessels who might carry heavy load, e.g. miners and haulers.
+
+        The scipt only takes forward thrusters into account, thus you do not need to rotate your ship or anything else to achieve the breaking distance.
+        */
+
+        const bool show_in_cockpit = true;  // true, if you want the results shown in your cockpit  TODO add LCD support
+        const string cockpitName = "Miner Cockpit";  // Name of cockpit
+        const int display = 2;  // Display number in cockpit
+
+        readonly bool show_safeDistance = false;  // true, if you want the safe distance to be shown, false otherwise
+        double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
+
+
+        // Any changes made below the following line are made on your own risk!
+        // --------------------------------------------------------------------------------------------------------
 
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
+            // surface.ContentType = ContentType.TEXT_AND_IMAGE;  //TODO put all the objects up here
+            // surface.Alignment = TextAlignment.CENTER;
         }
 
-        public void Main(string argument, UpdateType updateSource)
+        public void Main(/*string argument, UpdateType updateSource*/)
         {
-
-            // INITIALIZING
-            bool show_in_cockpit = true;  // true, if you want the results shown in your cockpit
-            string cockpitName = "Miner Cockpit";  // Name of cockpit
-            int display = 2;  // Display number in cockpit
-
-            bool show_safeDistance = false;  // true, if you want the safe distance to be shown, false otherwise
-            double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
-
-
-
-            // DON'T TOUCH!!!
             double speed = 0;  // speed in m/s
             double totalMass = 0;  // mass in Kg
             double force = 0;  // force in N
@@ -71,9 +59,12 @@ namespace IngameScript
             double time = 0;  // time in s
             double distance = 0;  // distance in m
             double safeDistance = 0;  // distance * safetyProportion in m
-            string text = "";  // output text
+            string output = "";  // output text
 
-            double inaccuracyProportion = 1.00;  // additional distance to stop
+            bool debugMode = false;  // If true outputs the debugText instead of the output
+            string debugText = "";  // debug text, which is used to show all values for debug
+
+            double inaccuracyProportion = 1.00;  // additional distance to stop  TODO really needed?
 
 
             // Initializes lists of all cockpits and thrusters
@@ -84,10 +75,18 @@ namespace IngameScript
             if (cockpits.Count == 0)
             {
                 Echo("There are no cockpits on this ship! \n");
+                Runtime.UpdateFrequency = UpdateFrequency.None;
                 return;
             }
 
-            for (int i = 0; i < cockpits.Count; i++)
+            if(Me.CubeGrid.IsStatic)
+            {
+                Echo("This grid is a station! \n");
+                Runtime.UpdateFrequency = UpdateFrequency.None;
+                return;
+            }
+
+            for (int i = 0; i < cockpits.Count; i++)  // TODO simplify, used in light script a way to find block of name, look up in MDK
             {
                 if (cockpits[i].CustomName == cockpitName)
                 {
@@ -97,6 +96,8 @@ namespace IngameScript
             if (cockpit == null)
             {
                 Echo("There is no cockpit named " + cockpitName + " on this ship! \n");
+                Runtime.UpdateFrequency = UpdateFrequency.None;
+                return;
             }
             List<IMyThrust> thrusters = new List<IMyThrust>();
             GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters);
@@ -109,7 +110,7 @@ namespace IngameScript
 
             // Calculates ship's speed
             speed = Math.Round(cockpit.GetShipSpeed(), 3);
-            // text += "Ship Speed: " + speed + "m/s \n";
+            debugText += "Ship Speed: " + speed + "m/s \n";
 
             // Calculates ship's force
             for (int i = 0; i < thrusters.Count; i++)
@@ -117,32 +118,37 @@ namespace IngameScript
                 IMyThrust thruster = thrusters[i];
                 if (thruster.Orientation.ToString().Split(',')[0] == cockpit.Orientation.ToString().Split(',')[0])
                 {
-                    force = force + thruster.MaxThrust;
+                    force += thruster.MaxThrust;
                 }
             }
             force = Math.Round(force, 3);
-            // text = text + force + "N \n";
+            debugText += force + "N \n";
 
             // Calculates ship's accerlation
             accerlation = Math.Round(force / totalMass, 3);
-            // text = text + accerlation + "m/s² \n";
+            debugText += accerlation + "m/s² \n";
 
             // Calculates ship's time to full stop
             time = Math.Round(speed / accerlation, 3);
-            text = text + time + " seconds to stop \n";
+            output += time + " seconds to stop \n";
+            debugText += time + " seconds to stop \n";
 
             // Calculates ship's distance to full stop
             distance = Math.Round((((speed * time) / 2) * inaccuracyProportion), 1);
-            text = text + distance + " meters to full stop \n";
+            output += distance + " meters to full stop \n";
+            debugText += distance + " meters to full stop \n";
 
             // If show_safeDistance is true calculates and shows safe distance to full stop
             if (show_safeDistance)
             {
                 if (safetyProportion < 1) { safetyProportion = 1; }
                 safeDistance = Math.Round(distance * safetyProportion, 1);
-                text = text + safeDistance + " for a save stop \n";
+                output += safeDistance + " for a save stop \n";
+                debugText += safeDistance + " for a save stop \n";
             }
 
+            // If debug is on
+            if (debugMode) { Echo(debugText); }
 
             // Prints everything on the cockpits panel
             if (show_in_cockpit)
@@ -154,10 +160,13 @@ namespace IngameScript
                 }
                 catch (Exception e)
                 {
-                    Echo("there is no display with number " + display);
+                    Echo("there is no display with number " + display + "\n");
+                    Echo(e.ToString());
                 }
-                surface.ContentType = ContentType.TEXT_AND_IMAGE;
-                surface.WriteText(text, false);
+
+                surface.ContentType = ContentType.TEXT_AND_IMAGE;  //TODO put all the objects up here
+                surface.Alignment = TextAlignment.CENTER;
+                surface.WriteText(output, false);
             }
         }
     }
