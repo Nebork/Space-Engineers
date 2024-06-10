@@ -1,4 +1,5 @@
-﻿using Sandbox.Game.EntityComponents;
+﻿using Sandbox.Game.Entities;
+using Sandbox.Game.EntityComponents;
 using Sandbox.ModAPI.Ingame;
 using Sandbox.ModAPI.Interfaces;
 using SpaceEngineers.Game.ModAPI.Ingame;
@@ -31,16 +32,19 @@ namespace IngameScript
         This script calculates and shows the required time and distance to come to a full stop with the current ship.
         This is intended to be used for larger space vessels who might carry heavy load, e.g. miners and haulers.
 
-        The scipt only takes forward thrusters into account, thus you do not need to rotate your ship or anything else to achieve the breaking distance.
+        The script only takes forward thrusters into account, thus you do not need to rotate your ship or anything else to achieve the breaking distance.
+        The script also only prints the data, thus you can change the color, padding etc. to your liking!
         */
 
-        readonly string cockpitName = "";  // Name of cockpit, if empty uses the current main cockpit
-        const int display = 2;  // Index number of display in cockpit, starting from 0
+        readonly string cockpitName = "";  // Name of cockpit, if empty uses the current main cockpit. Remote control is possible, see showOnLcD
+        readonly int display = 2;  // Index number of display in cockpit, starting from 0.
 
-        readonly bool showSafeDistance = false;  // true, if you want the safe distance to be shown instead, false otherwise
+        readonly bool showSafeDistance = false;  // true, if you want the safe distance to be shown instead, false otherwise.
         readonly double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
 
-        readonly bool showOnLcd = false;  // true, if you want the results shown in an LCD instead of the cockpit  TODO add LCD support
+        // if you want the results shown in an LCD instead of the cockpit.
+        readonly bool showOnLcd = false;  // true,  Needed for remote control. If using RC, please enter the name in cockpitName!
+        readonly string lcdName = "Distance LCD";  // Name of LCD, needs to be the name of the LCD, can not be left empty!
 
 
         // Any changes made below the following line are made on your own risk!
@@ -50,10 +54,12 @@ namespace IngameScript
         // Variables
         readonly bool debugMode = false;  // If true outputs the debugText instead of the output
 
-        readonly List<IMyCockpit> cockpits = new List<IMyCockpit>();
-        readonly IMyCockpit mainCockpit;
+        readonly List<IMyShipController> cockpits = new List<IMyShipController>();
+        readonly IMyShipController mainCockpit;
 
         readonly IMyTextSurface cockpitSurface;
+
+        readonly IMyTextPanel lcdPanel;
 
         readonly List<IMyThrust> thrusters = new List<IMyThrust>();
 
@@ -67,71 +73,100 @@ namespace IngameScript
 
             if (Me.CubeGrid.IsStatic)  // If grid is a station terminate program
             {
-                Echo("This grid is a station! \n Please recompile.");
+                Echo("This grid is a station! \nPlease fix and recompile.");
                 Runtime.UpdateFrequency = UpdateFrequency.None;
                 return;
             }
 
 
-            // Finds the given or main cockpit and shows the data on the given display
+            // Finds the given or main cockpit, needed to get speed and mass later on
+            if (cockpitName == "")  // If no cockpit name given, search for main cockpit
+            {
+                GridTerminalSystem.GetBlocksOfType<IMyShipController>(cockpits);
+                if (cockpits == null)
+                {
+                    Echo("There are no connected cockpits! \nPlease fix and recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
+                }
+                else
+                {
+                    foreach (IMyShipController cockpit in cockpits)  // finds main cockpit
+                    {
+                        if (cockpit.IsMainCockpit)
+                        {
+                            mainCockpit = cockpit;
+                            break;
+                        }
+                    }
+                    if (mainCockpit == null)
+                    {
+                        Echo("No cockpit has been declared as main cockpit! \nIf remote control is used, enter it's name please. \nPlease fix and recompile.");
+                        Runtime.UpdateFrequency = UpdateFrequency.None;
+                        return;
+                    }
+                }
+            }
+            else  // Retrieve cockpit from given name
+            {
+                // Checks if the found name is actually a cockpit
+                IMyTerminalBlock typeCheckBlock = GridTerminalSystem.GetBlockWithName(cockpitName);
+                if (typeCheckBlock == null)
+                {
+                    Echo($"There is no block with the name \"{cockpitName}\"! \nPlease fix and recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
+                }
+                if (typeCheckBlock is IMyShipController) { mainCockpit = (IMyShipController)typeCheckBlock; }
+                else
+                {
+                    Echo($"{cockpitName} is not a cockpit! \nPlease fix and recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
+                }
+            }
+
             if (!showOnLcd)
             {
-                if (cockpitName == "")  // If no cockpit name given, search for main cockpit
+                if (mainCockpit is IMyCockpit) { cockpitSurface = ((IMyCockpit)mainCockpit).GetSurface(display); }
+                else
                 {
-                    GridTerminalSystem.GetBlocksOfType<IMyCockpit>(cockpits);
-                    if (cockpits == null)
-                    {
-                        Echo("There are no connected cockpits! \n Please recompile.");
-                        Runtime.UpdateFrequency = UpdateFrequency.None;
-                        return;
-                    }
-                    else
-                    {
-                        foreach (IMyCockpit cockpit in cockpits)
-                        {
-                            if (cockpit.IsMainCockpit)
-                            {
-                                mainCockpit = cockpit;
-                                break;
-                            }
-                        }
-                        if (mainCockpit == null)
-                        {
-                            Echo("No cockpit has been declared as main cockpit! \n Please recompile.");
-                            Runtime.UpdateFrequency = UpdateFrequency.None;
-                            return;
-                        }
-                    }
+                    Echo($"\"{mainCockpit.CustomName}\" Is not cockpit with displays!  \nPlease fix and recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
                 }
-                else  // Retrieve cockpit from given name
-                {
-                    // Checks if the found name is actually a cockpit
-                    IMyTerminalBlock typeCheckBlock = GridTerminalSystem.GetBlockWithName(cockpitName);
-                    if (typeCheckBlock == null)
-                    {
-                        Echo($"There is no cockpit with the name \"{cockpitName}\"! \n Please recompile.");
-                        Runtime.UpdateFrequency = UpdateFrequency.None;
-                        return;
-                    }
-                    if (typeCheckBlock.GetType() == typeof(IMyCockpit)) { mainCockpit = (IMyCockpit)typeCheckBlock; }
-                    else
-                    {
-                        Echo($"{cockpitName} is not a cockpit! \n Please recompile.");
-                        Runtime.UpdateFrequency = UpdateFrequency.None;
-                        return;
-                    }
-                }
-
-                cockpitSurface = mainCockpit.GetSurface(display);
+                
                 if (cockpitSurface == null)
                 {
-                    Echo($"There is no display with index {display} in \"{mainCockpit.CustomName}\"! \n Please recompile.");
+                    Echo($"There is no display with index {display} in \"{mainCockpit.CustomName}\"! \nPlease fix and recompile.");
                     Runtime.UpdateFrequency = UpdateFrequency.None;
                     return;
                 }
 
+                // Settings for cockpit design
                 cockpitSurface.ContentType = ContentType.TEXT_AND_IMAGE;
-                cockpitSurface.Alignment = TextAlignment.CENTER;
+                cockpitSurface.Alignment = TextAlignment.CENTER; 
+            }
+            else  // If we use LCD
+            {
+                IMyTerminalBlock typeCheckBlock = GridTerminalSystem.GetBlockWithName(lcdName);
+                if (typeCheckBlock == null)
+                {
+                    Echo($"There is no block with the name \"{lcdName}\"! \nPlease fix and recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
+                }
+                if (typeCheckBlock is IMyTextPanel) { lcdPanel = (IMyTextPanel)typeCheckBlock;}
+                else  // TODO FINISH
+                {
+                    Echo($"{lcdName} is not an LCD! \nPlease fix and recompile.");
+                    Runtime.UpdateFrequency = UpdateFrequency.None;
+                    return;
+                }
+
+                // Settings for LCD design
+                lcdPanel.ContentType = ContentType.TEXT_AND_IMAGE;
+                lcdPanel.Alignment = TextAlignment.CENTER;
             }
         }
 
@@ -188,10 +223,11 @@ namespace IngameScript
             debugText += $"{(int) distance * safetyProportion} meters for a save stop \n";
 
             // If debug is on
-            if (debugMode) { Echo(debugText); } 
+            if (debugMode) { output = debugText; } 
 
             // Actual output in the cockpit
             if (!showOnLcd) { cockpitSurface.WriteText(output, false); }
+            else { lcdPanel.WriteText(output, false); }
         }
 
         // COPY UNTIL HERE
