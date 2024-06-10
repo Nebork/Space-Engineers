@@ -63,68 +63,69 @@ namespace IngameScript
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
             Echo("");  // Flushes previous messages
 
-            if(Me.CubeGrid.IsStatic)  // If grid is a station terminate program
+            GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters);
+
+            if (Me.CubeGrid.IsStatic)  // If grid is a station terminate program
             {
                 Echo("This grid is a station! \n Please recompile.");
                 Runtime.UpdateFrequency = UpdateFrequency.None;
                 return;
             }
 
-            // Whole code block finds the given cockpit or the only main cockpit
-            if(cockpitName == "")  // If no cockpit name given, search for main cockpit
+
+            // Finds the given or main cockpit and shows the data on the given display
+            if (!showOnLcd)
             {
-                GridTerminalSystem.GetBlocksOfType<IMyCockpit>(cockpits);
-                if (cockpits == null)
+                if (cockpitName == "")  // If no cockpit name given, search for main cockpit
                 {
-                    Echo("There are no connected cockpits! \n Please recompile.");
-                    Runtime.UpdateFrequency = UpdateFrequency.None;
-                    return;
-                }
-                else
-                {
-                    foreach (IMyCockpit cockpit in cockpits)
+                    GridTerminalSystem.GetBlocksOfType<IMyCockpit>(cockpits);
+                    if (cockpits == null)
                     {
-                        if (cockpit.IsMainCockpit)
+                        Echo("There are no connected cockpits! \n Please recompile.");
+                        Runtime.UpdateFrequency = UpdateFrequency.None;
+                        return;
+                    }
+                    else
+                    {
+                        foreach (IMyCockpit cockpit in cockpits)
                         {
-                            mainCockpit = cockpit;
-                            break;
+                            if (cockpit.IsMainCockpit)
+                            {
+                                mainCockpit = cockpit;
+                                break;
+                            }
+                        }
+                        if (mainCockpit == null)
+                        {
+                            Echo("No cockpit has been declared as main cockpit! \n Please recompile.");
+                            Runtime.UpdateFrequency = UpdateFrequency.None;
+                            return;
                         }
                     }
-                    if (mainCockpit == null)
+                }
+                else  // Retrieve cockpit from given name
+                {
+                    // Checks if the found name is actually a cockpit
+                    IMyTerminalBlock typeCheckBlock = GridTerminalSystem.GetBlockWithName(cockpitName);
+                    if (typeCheckBlock == null)
                     {
-                        Echo("No cockpit has been declared as main cockpit! \n Please recompile.");
+                        Echo($"There is no cockpit with the name \"{cockpitName}\"! \n Please recompile.");
+                        Runtime.UpdateFrequency = UpdateFrequency.None;
+                        return;
+                    }
+                    if (typeCheckBlock.GetType() == typeof(IMyCockpit)) { mainCockpit = (IMyCockpit)typeCheckBlock; }
+                    else
+                    {
+                        Echo($"{cockpitName} is not a cockpit! \n Please recompile.");
                         Runtime.UpdateFrequency = UpdateFrequency.None;
                         return;
                     }
                 }
-            }
-            else
-            {
-                // Checks if the found name is actually a cockpit
-                IMyTerminalBlock typeCheckBlock = GridTerminalSystem.GetBlockWithName(cockpitName);
-                if (typeCheckBlock.GetType() == typeof(IMyCockpit)) { mainCockpit = (IMyCockpit)typeCheckBlock; }
-                else
-                {
-                    Echo($"{cockpitName} is not a cockpit! \n Please recompile.");
-                    Runtime.UpdateFrequency = UpdateFrequency.None;
-                    return;
-                }
 
-                if (mainCockpit == null)
-                {
-                    Echo($"There is no cockpit with the name \"{cockpitName}\"! \n Please recompile.");
-                    Runtime.UpdateFrequency = UpdateFrequency.None;
-                    return;
-                }
-            }
-
-            // Shows everything in the cockpit
-            if (!showOnLcd)
-            {
                 cockpitSurface = mainCockpit.GetSurface(display);
                 if (cockpitSurface == null)
                 {
-                    Echo($"There is no display in \"{mainCockpit.CustomName}\"! \n Please recompile.");
+                    Echo($"There is no display with index {display} in \"{mainCockpit.CustomName}\"! \n Please recompile.");
                     Runtime.UpdateFrequency = UpdateFrequency.None;
                     return;
                 }
@@ -132,8 +133,6 @@ namespace IngameScript
                 cockpitSurface.ContentType = ContentType.TEXT_AND_IMAGE;
                 cockpitSurface.Alignment = TextAlignment.CENTER;
             }
-
-            GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters);
         }
 
         public void Main(/*string argument, UpdateType updateSource*/)
