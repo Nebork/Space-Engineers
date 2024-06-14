@@ -42,7 +42,7 @@ namespace IngameScript
         readonly bool showSafeDistance = false;  // true, if you want the safe distance to be shown instead, false otherwise.
         readonly double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
 
-        // if you want the results shown in an LCD instead of the cockpit.
+        // If you want the results shown in an LCD instead of the cockpit.
         readonly bool showOnLcd = false;  // true,  Needed for remote control. If using RC, please enter the name in cockpitName!
         readonly string lcdName = "Distance LCD";  // Name of LCD, needs to be the name of the LCD, can not be left empty!
 
@@ -69,8 +69,6 @@ namespace IngameScript
             Runtime.UpdateFrequency = UpdateFrequency.Update10;
             Echo("");  // Flushes previous messages
 
-            GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters);
-
             if (Me.CubeGrid.IsStatic)  // If grid is a station terminate program
             {
                 Echo("This grid is a station! \nPlease fix and recompile.");
@@ -91,7 +89,7 @@ namespace IngameScript
                 }
                 else
                 {
-                    foreach (IMyShipController cockpit in cockpits)  // finds main cockpit
+                    foreach (IMyShipController cockpit in cockpits)  // Finds main cockpit
                     {
                         if (cockpit.IsMainCockpit)
                         {
@@ -126,6 +124,9 @@ namespace IngameScript
                 }
             }
 
+            // Retrieve all the correct thrusters, needs main cockpit first
+            GridTerminalSystem.GetBlocksOfType<IMyThrust>(thrusters, thruster => thruster.Orientation.Forward == mainCockpit.Orientation.Forward);
+
             if (!showOnLcd)
             {
                 if (mainCockpit is IMyCockpit) { cockpitSurface = ((IMyCockpit)mainCockpit).GetSurface(display); }
@@ -157,7 +158,7 @@ namespace IngameScript
                     return;
                 }
                 if (typeCheckBlock is IMyTextPanel) { lcdPanel = (IMyTextPanel)typeCheckBlock;}
-                else  // TODO FINISH
+                else
                 {
                     Echo($"{lcdName} is not an LCD! \nPlease fix and recompile.");
                     Runtime.UpdateFrequency = UpdateFrequency.None;
@@ -170,7 +171,7 @@ namespace IngameScript
             }
         }
 
-        public void Main(/*string argument, UpdateType updateSource*/)
+        public void Main()
         {
             double speed;  // speed in m/s
             double totalMass;  // mass in Kg
@@ -195,10 +196,7 @@ namespace IngameScript
             // Calculates ship's force
             foreach (IMyThrust thruster in thrusters)
             {
-                if (thruster.Orientation.Forward == mainCockpit.Orientation.Forward)
-                {
-                    force += thruster.MaxThrust;
-                }
+                force += thruster.MaxThrust;
             }
             force = Math.Round(force, 3);
             debugText += force + "N \n";
