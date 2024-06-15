@@ -43,7 +43,7 @@ namespace IngameScript
         //
         // to learn more about ingame scripts.
 
-        MyIni _ini = new MyIni();
+        /* MyIni _ini = new MyIni();
 
         // Define the variables used for the custom data.
         string _gridName;
@@ -224,6 +224,6 @@ namespace IngameScript
             Rename(h2_O2_Generator, _h2_O2_Generator);
 
             Rename(misc, _misc);
-        }
+        }*/
     }
 }
