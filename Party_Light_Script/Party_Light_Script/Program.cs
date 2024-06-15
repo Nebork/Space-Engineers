@@ -40,10 +40,10 @@ namespace IngameScript
 
 
         // Global Definitions
-        IMyBlockGroup partyGroup;
-        List<IMyLightingBlock> partyLights;
+        readonly IMyBlockGroup partyGroup;
+        readonly List<IMyLightingBlock> partyLights;
 
-        Random rnd = new Random();
+        readonly Random rnd = new Random();
 
         // Main function that is run, every time the block is recompiled
         public Program()
