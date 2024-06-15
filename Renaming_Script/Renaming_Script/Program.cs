@@ -74,10 +74,10 @@ namespace IngameScript
         }
 
         // Converts an int to a roman number as string
-        public string IntToRoman(int number)
+        public static string IntToRoman(int number)
         {
             string output = "";
-            int[] numberLimits = {1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1};
+            int[] numberLimits = { 1000, 900, 500, 400, 100, 90, 50, 40, 10, 9, 5, 4, 1 };
             string[] romanLimits = { "M", "CM", "D", "CD", "C", "XC", "L", "XL", "X", "IX", "V", "IV", "I" };
 
             for (int i = 0; i < numberLimits.Length; i++)
@@ -91,27 +91,57 @@ namespace IngameScript
             return output;
         }
 
-        public string AddNumbering(string name, int number, int maxNumber)
+        public static string AddLeadingZeroes(int number, int maxNumber)
         {
-            string targetName = name;
-            int numberOfZeros = 0;
+            int numberOfZeros = (int)Math.Log10(maxNumber) - (int)Math.Log10(number);
+            return String.Concat(Enumerable.Repeat("0", numberOfZeros)) + number;
+        }
 
-            if (!_romanNumerals)
-            {
-                if (_leadingZeros)
-                {
-                    numberOfZeros = (int)Math.Log10(maxNumber) - (int)Math.Log10(number);
-                }
+        public class BlockGroup
+        {
+            public string Name;
+            public string Operations;
 
-                targetName += " " + String.Concat(Enumerable.Repeat("0", numberOfZeros)) + number;
-            }
-            else
-            {
-                targetName += " " + IntToRoman(number);
-            }
+            public List<IMyTerminalBlock> Blocks = new List<IMyTerminalBlock>();
+
             
+            public BlockGroup(string groupName, string wantedOperations, List<IMyTerminalBlock> containedBlocks) : this(groupName, wantedOperations)
+            {
+                Blocks = containedBlocks;
+            }
+            public BlockGroup(string groupName, string wantedOperations)
+            {
+                Name = groupName;
+                Operations = wantedOperations;
+            }
 
-            return targetName;
+            public void Rename(bool removeDlcNaming, bool leadingZeros, bool romanNumerals, string prefix, string postfix)
+            {
+                for(int i = 0; i < Blocks.Count; i++)
+                {
+                    IMyTerminalBlock block = Blocks[i];
+                    string targetName = block.DefinitionDisplayNameText;
+
+                    if (removeDlcNaming)
+                    {
+                        targetName = targetName.Replace("Industrial ", "");
+                        targetName = targetName.Replace("Sci-Fi ", "");
+                        targetName = targetName.Replace("Warfare ", "");
+                    }
+
+                    if (Operations.Contains("N"))
+                    {
+                        targetName += AddLeadingZeroes(i + 1, Blocks.Count);
+                    }
+
+                    if (prefix != "")
+                        targetName = prefix + " " + targetName;
+                    if (postfix != "")
+                        targetName = targetName + " " + postfix;
+
+                    block.CustomName = targetName;
+                }
+            }
         }
 
         public void Rename<T>(List<T> blocks, string operations)
@@ -155,7 +185,7 @@ namespace IngameScript
             {
                 throw new Exception(result.ToString());
             }
-            
+
             // Get all variables from the ini/custom data
             _gridName = _ini.Get("Nebork's Renaming Script", "GridName").ToString();
             _workOnSubgrids = _ini.Get("Nebork's Renaming Script", "WorkOnSubgrids").ToBoolean();
@@ -176,7 +206,6 @@ namespace IngameScript
 
         public void Main(string argument, UpdateType updateSource)
         {
-
             if (_gridName == "")
             {
                 _gridName = Me.CubeGrid.CustomName;
@@ -195,7 +224,7 @@ namespace IngameScript
             GridTerminalSystem.GetBlocks(allBlocks);
             foreach (IMyTerminalBlock block in allBlocks)
             {
-                if(_workOnSubgrids || block.CubeGrid.CustomName == _gridName)  // Only adds blocks of the wanted grids
+                if (_workOnSubgrids || block.CubeGrid.CustomName == _gridName)  // Only adds blocks of the wanted grids
                 {
                     if (
                     AddIfType(block, refineries)
@@ -219,11 +248,11 @@ namespace IngameScript
                 return;
             }
 
-            Rename(refineries, _refineries);
-            Rename(assembler, _assembler);
-            Rename(h2_O2_Generator, _h2_O2_Generator);
+            // Rename(refineries, _refineries);
+            // Rename(assembler, _assembler);
+            // Rename(h2_O2_Generator, _h2_O2_Generator);
 
-            Rename(misc, _misc);
+            // Rename(misc, _misc);
         }*/
     }
 }
