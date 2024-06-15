@@ -22,26 +22,47 @@ namespace IngameScript
 {
     partial class Program : MyGridProgram
     {
-        // This file contains your actual script.
-        //
-        // You can either keep all your code here, or you can create separate
-        // code files to make your program easier to navigate while coding.
-        //
-        // In order to add a new utility class, right-click on your project, 
-        // select 'New' then 'Add Item...'. Now find the 'Space Engineers'
-        // category under 'Visual C# Items' on the left hand side, and select
-        // 'Utility Class' in the main area. Name it in the box below, and
-        // press OK. This utility class will be merged in with your code when
-        // deploying your final script.
-        //
-        // You can also simply create a new utility class manually, you don't
-        // have to use the template if you don't want to. Just do so the first
-        // time to see what a utility class looks like.
-        // 
-        // Go to:
-        // https://github.com/malware-dev/MDK-SE/wiki/Quick-Introduction-to-Space-Engineers-Ingame-Scripts
-        //
-        // to learn more about ingame scripts.
+        // Global Setting Variables
+
+        string _prefix;
+        string _postfix;
+
+        // Used to go over every group
+        static List<BlockGroup> blockGroups = new List<BlockGroup>();
+        static List<string> blockGroupNames = new List<string>();
+
+        // Stores all given data and handles renaming
+        public class BlockGroup
+        {
+            public string GroupName { get; set; } = string.Empty;  // Used in the custom data
+            public string Command { get; }
+
+            public string FutureName { get; set; }  // Only one name is required. Only variation in numbering  TODO is only one required?
+
+            // TODO add indexer over block members to access every member
+            public List<IMyTerminalBlock> groupMembers;
+
+            public BlockGroup(IMyTerminalBlock singleBlock)
+            {
+                blockGroups.Add(this);
+                blockGroupNames.Add(this.GroupName);
+            }
+        }
+
+        // Runs at the start of the game or every time it is recompiled (edit code or press recompile)
+        // Shall check and generate the custom data
+        public Program()
+        {
+            Runtime.UpdateFrequency = UpdateFrequency.Once;
+        }
+
+        // Runs every time someone presses run. Shall fetch all the blocks and put them into the groups
+        // processes the command string and uses it to rename all the blocks of a group
+        // maybe use update source to differentiate from run from program (fresh start) or run from command
+        public void Main(/*string argument, UpdateType updateSource*/)
+        {
+
+        }
 
         /* MyIni _ini = new MyIni();
 
