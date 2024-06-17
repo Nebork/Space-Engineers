@@ -22,10 +22,27 @@ namespace IngameScript
 {
     partial class Program : MyGridProgram
     {
+        // COPY FROM HERE
+
+        /*
+        Nebork's Renaming Script
+
+        This script is used to rename every block uniformly in the control panel.
+        This is extremely useful, if you care about proper naming and organizing blocks WITHOUT having to rename 100+ blocks manually.
+        */
+
+
+        // Any changes made below the following line are made on your own risk!
+        // --------------------------------------------------------------------------------------------------------
+
+
         // Global Setting Variables
 
-        string _prefix;
-        string _postfix;
+        readonly static string _prefix = "[BSE]";
+        readonly static string _postfix = "";
+
+        const bool _removeDlcNaming = true;
+
 
         // Used to go over every group
         static List<BlockGroup> blockGroups = new List<BlockGroup>();
@@ -35,19 +52,57 @@ namespace IngameScript
         public class BlockGroup
         {
             public string GroupName { get; set; } = string.Empty;  // Used in the custom data
-            public string Command { get; }
-
-            public string FutureName { get; set; }  // Only one name is required. Only variation in numbering  TODO is only one required?
+            public string Command { get; } = string.Empty;
 
             // TODO add indexer over block members to access every member
             public List<IMyTerminalBlock> groupMembers;
 
-            public BlockGroup(IMyTerminalBlock singleBlock)
+
+            // Settings fetched from _Command. TODO another word for fetch  TODO not true, read from custom data
+            private bool _numbering = true;
+
+
+            // Constructor, adding it to the global variables
+            public BlockGroup(IMyTerminalBlock firstBlock, string groupname = "")
             {
+                this.GroupName = groupname;
                 blockGroups.Add(this);
-                blockGroupNames.Add(this.GroupName);
+                blockGroupNames.Add(groupname);
+
+                groupMembers = new List<IMyTerminalBlock>() { firstBlock };  // Initialises the list and puts in first block.
+            }
+
+            // Returns name without any of the dlc prefixes, accesses removeDlcNaming!
+            private static string RemoveDlcNaming(string dlcName)
+            {
+                string output = dlcName;
+                if (_removeDlcNaming)
+                {
+                    output = output.Replace("Industrial ", "");
+                    output = output.Replace("Sci-Fi ", "");
+                    output = output.Replace("Warfare ", "");
+                }
+                return output;
+            }
+
+            // Main function. Renames every block in the group with the given settings.
+            public void Rename()
+            {
+                for(int i = 0; i < groupMembers.Count; i++)
+                {
+                    string futureName = "";
+
+                    futureName += $"{_prefix} ";
+                    futureName += $"{RemoveDlcNaming(groupMembers[i].DefinitionDisplayNameText)} ";
+                    if(_numbering) { futureName += (i+1).ToString(); }
+                    futureName += $"{_postfix}";
+
+
+                    groupMembers[i].CustomName = futureName;
+                }
             }
         }
+
 
         // Runs at the start of the game or every time it is recompiled (edit code or press recompile)
         // Shall check and generate the custom data
@@ -56,13 +111,53 @@ namespace IngameScript
             Runtime.UpdateFrequency = UpdateFrequency.Once;
         }
 
+
         // Runs every time someone presses run. Shall fetch all the blocks and put them into the groups
         // processes the command string and uses it to rename all the blocks of a group
         // maybe use update source to differentiate from run from program (fresh start) or run from command
         public void Main(/*string argument, UpdateType updateSource*/)
         {
 
+            // Get all blocks and prepare for assignment to groups.
+            List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
+            GridTerminalSystem.GetBlocks(allBlocks);
+            string output= "";
+            
+            // Loop to assign every block to a group or create a new one.
+            foreach (IMyTerminalBlock terminalBlock in allBlocks)
+            {
+                string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
+                output += $"{terminalBlock.CustomName} is type {easyBlockType}!\n";
+
+                int i = blockGroupNames.IndexOf(easyBlockType);
+                if (i == -1)  // no group with this name found
+                {
+                    new BlockGroup(terminalBlock, easyBlockType);
+                    output += $"Created new group {easyBlockType}\n\n";
+                }
+                else  // there already is a group with this name, add the block
+                {
+                    blockGroups[i].groupMembers.Add(terminalBlock);
+                    output += $"Added to group {easyBlockType}\n\n";
+                }
+            }
+
+            Echo(output);
+
+
+            // Main loop, iterates every block group and renames it according to their settings.
+            foreach (BlockGroup blockGroup in blockGroups)
+            {
+                blockGroup.Rename();
+            }
         }
+
+        // COPY UNTIL HERE
+
+
+
+
+
 
         /* MyIni _ini = new MyIni();
 
