@@ -42,6 +42,7 @@ namespace IngameScript
         readonly static string _postfix = "";
 
         const bool _removeDlcNaming = true;
+        const bool _leadingZeros = true;
 
 
         // Used to go over every group
@@ -52,13 +53,13 @@ namespace IngameScript
         public class BlockGroup
         {
             public string GroupName { get; set; } = string.Empty;  // Used in the custom data
-            public string Command { get; } = string.Empty;
+            public string Command { get; set; } = string.Empty;
 
             // TODO add indexer over block members to access every member
             public List<IMyTerminalBlock> groupMembers;
 
 
-            // Settings fetched from _Command. TODO another word for fetch  TODO not true, read from custom data
+            // Settings processed from _Command.  TODO not true, read from custom data
             private bool _numbering = true;
 
 
@@ -94,7 +95,15 @@ namespace IngameScript
 
                     futureName += $"{_prefix} ";
                     futureName += $"{RemoveDlcNaming(groupMembers[i].DefinitionDisplayNameText)} ";
-                    if(_numbering) { futureName += (i+1).ToString(); }
+                    if(_numbering)
+                    {
+                        if (!_leadingZeros) { futureName += (i + 1).ToString(); }
+                        else
+                        {
+                            int numberOfZeros = (int)Math.Log10(groupMembers.Count) - (int)Math.Log10(i + 1);
+                            futureName += $"{String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
+                        }
+                    }
                     futureName += $"{_postfix}";
 
 
@@ -117,39 +126,41 @@ namespace IngameScript
         // maybe use update source to differentiate from run from program (fresh start) or run from command
         public void Main(/*string argument, UpdateType updateSource*/)
         {
-
+            blockGroups.Clear();
+            blockGroupNames.Clear();
             // Get all blocks and prepare for assignment to groups.
             List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocks(allBlocks);
-            string output= "";
+            string debug = "";
             
             // Loop to assign every block to a group or create a new one.
             foreach (IMyTerminalBlock terminalBlock in allBlocks)
             {
                 string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
-                output += $"{terminalBlock.CustomName} is type {easyBlockType}!\n";
+                // debug += $"{terminalBlock.CustomName} is type {easyBlockType}!\n";
 
                 int i = blockGroupNames.IndexOf(easyBlockType);
                 if (i == -1)  // no group with this name found
                 {
                     new BlockGroup(terminalBlock, easyBlockType);
-                    output += $"Created new group {easyBlockType}\n\n";
+                    // debug += $"Created new group {easyBlockType}\n\n";
                 }
                 else  // there already is a group with this name, add the block
                 {
                     blockGroups[i].groupMembers.Add(terminalBlock);
-                    output += $"Added to group {easyBlockType}\n\n";
+                    // debug += $"Added to group {easyBlockType}\n\n";
                 }
             }
 
-            Echo(output);
 
 
             // Main loop, iterates every block group and renames it according to their settings.
             foreach (BlockGroup blockGroup in blockGroups)
             {
+                debug += blockGroup.GroupName + "\n";
                 blockGroup.Rename();
             }
+            Echo(debug);
         }
 
         // COPY UNTIL HERE
