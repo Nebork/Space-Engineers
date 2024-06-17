@@ -73,16 +73,15 @@ namespace IngameScript
                 groupMembers = new List<IMyTerminalBlock>() { firstBlock };  // Initialises the list and puts in first block.
             }
 
-            // Returns name without any of the dlc prefixes, accesses removeDlcNaming!
+            // Returns name without any of the dlc prefixes.
             private static string RemoveDlcNaming(string dlcName)
             {
                 string output = dlcName;
-                if (_removeDlcNaming)
-                {
-                    output = output.Replace("Industrial ", "");
-                    output = output.Replace("Sci-Fi ", "");
-                    output = output.Replace("Warfare ", "");
-                }
+
+                output = output.Replace("Industrial ", "");
+                output = output.Replace("Sci-Fi ", "");
+                output = output.Replace("Warfare ", "");
+
                 return output;
             }
 
@@ -93,9 +92,11 @@ namespace IngameScript
                 {
                     string futureName = "";
 
+                    // creating futureName
                     futureName += $"{_prefix} ";
-                    futureName += $"{RemoveDlcNaming(groupMembers[i].DefinitionDisplayNameText)} ";
-                    if(_numbering)
+                    if (_removeDlcNaming) { futureName += $"{RemoveDlcNaming(groupMembers[i].DefinitionDisplayNameText)} "; }
+                    else { futureName += groupMembers[i].DefinitionDisplayNameText; }
+                    if (_numbering)
                     {
                         if (!_leadingZeros) { futureName += (i + 1).ToString(); }
                         else
