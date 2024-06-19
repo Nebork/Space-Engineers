@@ -29,11 +29,12 @@ namespace IngameScript
         /*
         Nebork's Breaking Distance Script
 
-        This script calculates and shows the required time and distance to come to a full stop with the current ship.
+        The Breaking DIstance script calculates and shows the required time and distance to come to a full stop with the current ship with the brakeforce of the forwarde facing thrusters.
         This is intended to be used for larger space vessels who might carry heavy load, e.g. miners and haulers.
 
-        The script only takes forward thrusters into account, thus you do not need to rotate your ship or anything else to achieve the breaking distance.
-        The script also only prints the data, thus you can change the color, padding etc. to your liking!
+        The script only takes forward thrusters into account, so you do not need to rotate your ship or anything else to achieve the breaking distance.
+        The script also only prints the data, therefore you can change the color, padding etc. to your liking!
+        The script can also print the data to the LCD Screen specified below by its name.
         */
 
         readonly string cockpitName = "";  // Name of cockpit, if empty uses the current main cockpit. Remote control is possible, see showOnLcD
@@ -43,7 +44,7 @@ namespace IngameScript
         readonly double safetyProportion = 1.1;  // safe distance = distance * safetyProportion. Should be greater than 1!
 
         // If you want the results shown in an LCD instead of the cockpit.
-        readonly bool showOnLcd = false;  // true,  Needed for remote control. If using RC, please enter the name in cockpitName!
+        readonly bool showOnLcd = false;  // true, needed for remote control. If using RC, please enter the name in cockpitName!
         readonly string lcdName = "Distance LCD";  // Name of LCD, needs to be the name of the LCD, can not be left empty!
 
 
