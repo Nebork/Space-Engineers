@@ -17,3 +17,4 @@ Font Monospace, alignment Center
   Zeit für einen Gerstensaft.
   Es ist 25:45, irgendwo.
   Alle Flüge zur ISS wurden kurzfristig abgesagt, wir bitten um ihr Verständnis
+  Von Avorion: "Wer würde sein Schiff denn bitte auch aus Stein bauen"
