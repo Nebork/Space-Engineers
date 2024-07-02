@@ -38,10 +38,10 @@ namespace IngameScript
 
         // Global Setting Variables
 
-        readonly static string _prefix = "[BSE]";
-        readonly static string _postfix = "";
+        static string _prefix;
+        static string _postfix;
 
-        const bool _leadingZeros = true;
+        static bool _leadingZeros;
 
 
         // Used to go over every group
@@ -147,6 +147,7 @@ namespace IngameScript
             // For just adding the block groups to the current custom data
             string addition = "";
 
+            // TODO add the check, that only NEW groups are added
             foreach (BlockGroup blockGroup in blockGroups)
             {
                 addition += $"{blockGroup.GroupName} = \n";
@@ -160,26 +161,51 @@ namespace IngameScript
         // Shall check and generate the custom data
         public Program()
         {
-            Runtime.UpdateFrequency = UpdateFrequency.Once;
+            Runtime.UpdateFrequency = UpdateFrequency.None;
+            CreateBlockGroups();
+            CreateCustomData();
         }
 
 
         // Runs every time someone presses run. Shall fetch all the blocks and put them into the groups
         // processes the command string and uses it to rename all the blocks of a group
-        // maybe use update source to differentiate from run from program (fresh start) or run from command
+        // TODO maybe use update source to differentiate from run from program (fresh start) or run from command
         public void Main(/*string argument, UpdateType updateSource*/)
         {
             string debug = "";
 
             CreateBlockGroups();
-            CreateCustomData();
+
+
+            MyIni _ini = new MyIni();  // TODO _ini needed global?
+
+            // Try to parse the ini
+            MyIniParseResult result;
+            if (!_ini.TryParse(Me.CustomData, out result))
+            {
+                Echo("Could not parse the Custom Data, syntax error!");
+                throw new Exception(result.ToString());
+            }
+
+            // Read all settings
+            _prefix = _ini.Get("Nebork's Renaming Script", "Prefix").ToString();
+            _postfix = _ini.Get("Nebork's Renaming Script", "Postfix").ToString();
+
+            _leadingZeros = _ini.Get("Nebork's Renaming Script", "LeadingZeros").ToBoolean();
+
+            foreach (BlockGroup blockGroup in blockGroups)
+            {
+                blockGroup.Command = _ini.Get("Nebork's Renaming Script", blockGroup.GroupName).ToString();
+            }
+
 
             // Main loop, iterates every block group and renames it according to their settings.
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                debug += blockGroup.GroupName + "\n";
                 blockGroup.Rename();
             }
+
+
             Echo(debug);
         }
 
