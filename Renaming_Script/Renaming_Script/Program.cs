@@ -60,14 +60,14 @@ namespace IngameScript
 
 
             // Settings processed from Command, see Process()
-            private bool _numbering;  // -N
-            private bool _rename;  // -R "x"
-            private string _replacementName;  // "x"
-            private bool _showInTerminal;  // -T
-            private bool _showInInventory;  // -I
-            private bool _showOnHud;  // -H
-            private bool _useConveyor;  // -C
+            private bool _numbering = false;  // -N
+            private bool _showInTerminal = false;  // -T
+            private bool _showInInventory = false;  // -I
+            private bool _showOnHud = false;  // -H
+            private bool _showInToolbarConfig = false;  // -B
 
+            private bool _rename = false;  // -R "x"
+            private string _replacementName;  // "x"
 
             // Constructor, adding it to the global variables
             public BlockGroup(IMyTerminalBlock firstBlock, string groupname = "")
@@ -83,9 +83,12 @@ namespace IngameScript
             // Main function. Renames every block in the group with the given settings.
             public int Rename()
             {
-                if(this.Process() == -1) { return -1; }
+                if(this.Process() == -1) { return -1; }  // returns -1 if process fails
+                if(this.Command.Contains("-S")) { return 0; }  // if skip is used
+
                 for(int i = 0; i < groupMembers.Count; i++)
                 {
+                    // Renaming
                     string futureName = "";
 
                     // creating futureName
@@ -103,8 +106,14 @@ namespace IngameScript
                     }
                     futureName += $" {_postfix}";
 
-
                     groupMembers[i].CustomName = futureName;
+
+
+                    // Settings
+                    groupMembers[i].ShowInInventory = this._showInInventory;
+                    groupMembers[i].ShowOnHUD = this._showOnHud;
+                    groupMembers[i].ShowInTerminal = this._showInTerminal;
+                    groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
                 }
                 return 0;
             }
@@ -114,7 +123,7 @@ namespace IngameScript
             {
                 this.Command = this.Command.Replace(" ", "");
                 // Checks if input is not valid, good luck with Regex :D
-                if(!System.Text.RegularExpressions.Regex.IsMatch(this.Command, "(-[HTICNR]|(-R\"[a-zA-Z0-9]+\"))*"))
+                if(this.Command != "" && !System.Text.RegularExpressions.Regex.IsMatch(this.Command, "(-[NTIHBS]|(-R\"[a-zA-Z0-9]+\"))+"))
                 {
                     return -1;
                 }
@@ -127,7 +136,7 @@ namespace IngameScript
                     else if (commands[i] == "I") this._showInInventory = true;
                     else if (commands[i] == "H") this._showOnHud = true;
                     else if (commands[i] == "T") this._showInTerminal = true;
-                    else if (commands[i] == "C") this._useConveyor = true;
+                    else if (commands[i] == "B") this._showInToolbarConfig = true;
                     else if (System.Text.RegularExpressions.Regex.IsMatch(commands[i], "R\"[a-zA-Z0-9]+\""))
                     {
                         this._rename = true;
@@ -171,7 +180,7 @@ namespace IngameScript
         public void CreateCustomData()
         {
             // For just adding the block groups to the current custom data
-            string addition = "";
+            string addition = "\n";
 
             // TODO add the check, that only NEW groups are added
             foreach (BlockGroup blockGroup in blockGroups)

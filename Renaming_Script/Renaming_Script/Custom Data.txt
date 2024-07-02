@@ -22,9 +22,6 @@ Postfix =
 ; If true, adds leading zeros to numberings if the number of items is greater than 10. Leads to better sorting in terminal. [true/false]
 LeadingZeros = true
 
-; If true, converts all numbering to roman numerals. Overwrites LeadingZeros. [true/false]
-RomanNumerals = false
-
 ; TODO add further global settings
 
 ; ------------------------------------------------------
@@ -36,11 +33,11 @@ RomanNumerals = false
 ; H: Show on HUD
 ; T: Show in terminal
 ; I: Show in inventory
-; C: Use conveyor system  // TODO Usually always true, should I change the tag to only be needed if not wanted to use the conveyor? Would be more confusing.
-; N: Number all blocks, "Refineries: -N" leads to the refineries being named "Refinery 1", "Refinery 2", ...
-; R: Renames the base name to a given string. Example: 'Refineries: RG "Smelter"' leads to all Refineries being named to 'Smelter' in addition to prefixes etc.
+; N: Number all blocks, "Refinery = -N" leads to the refineries being named "Refinery 1", "Refinery 2", ...
+; R: Renames the base name to a given string. Example: 'Refineries: -R "Smelter"' leads to all Refineries being named to 'Smelter' in addition to prefixes etc.
+; B: Show in toolbar config
 ; S: Skips the whole block group. No block will be touched!
 ; TODO add more, what is needed/wanted.
 ;
-; Example: Refinery = -G -I -C -N -R "Smelter"
-; All refineries are shown in the inventory and use the conveyor network. They are called "Smelter 1", "Smelter 2", ...
+; Example: Refinery = -I -C -N -R "Smelter"
+; All refineries are numbered, shown in the inventory and use the conveyor network. They are called "Smelter 1", "Smelter 2", ...
