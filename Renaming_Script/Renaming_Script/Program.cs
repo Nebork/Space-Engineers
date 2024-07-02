@@ -8,6 +8,7 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
+// using System.Text.RegularExpressions;  // can be implemented, but the whole namespace is needed
 using VRage;
 using VRage.Collections;
 using VRage.Game;
@@ -45,8 +46,8 @@ namespace IngameScript
 
 
         // Used to go over every group
-        static List<BlockGroup> blockGroups = new List<BlockGroup>();
-        static List<string> blockGroupNames = new List<string>();
+        readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
+        readonly static List<string> blockGroupNames = new List<string>();
 
         // Stores all given data and handles renaming
         public class BlockGroup
@@ -59,9 +60,13 @@ namespace IngameScript
 
 
             // Settings processed from Command, see Process()
-            private bool _numbering;
-            private bool _rename;
-            private string _replacementName;
+            private bool _numbering;  // -N
+            private bool _rename;  // -R "x"
+            private string _replacementName;  // "x"
+            private bool _showInTerminal;  // -T
+            private bool _showInInventory;  // -I
+            private bool _showOnHud;  // -H
+            private bool _useConveyor;  // -C
 
 
             // Constructor, adding it to the global variables
@@ -76,9 +81,9 @@ namespace IngameScript
 
 
             // Main function. Renames every block in the group with the given settings.
-            public void Rename()
+            public int Rename()
             {
-                this.Process();
+                if(this.Process() == -1) { return -1; }
                 for(int i = 0; i < groupMembers.Count; i++)
                 {
                     string futureName = "";
@@ -101,14 +106,35 @@ namespace IngameScript
 
                     groupMembers[i].CustomName = futureName;
                 }
+                return 0;
             }
 
             // Processes the settings from Command  // TODO finish
-            private void Process()
+            private int Process()
             {
-                this._numbering = true;
-                this._rename = false;
-                this._replacementName = "new Name";
+                this.Command = this.Command.Replace(" ", "");
+                // Checks if input is not valid, good luck with Regex :D
+                if(!System.Text.RegularExpressions.Regex.IsMatch(this.Command, "(-[HTICNR]|(-R\"[a-zA-Z0-9]+\"))*"))
+                {
+                    return -1;
+                }
+
+                string[] commands = this.Command.Split('-');
+
+                for (int i = 0; i < commands.Length; i++)
+                {
+                    if (commands[i] == "N") this._numbering = true;
+                    else if (commands[i] == "I") this._showInInventory = true;
+                    else if (commands[i] == "H") this._showOnHud = true;
+                    else if (commands[i] == "T") this._showInTerminal = true;
+                    else if (commands[i] == "C") this._useConveyor = true;
+                    else if (System.Text.RegularExpressions.Regex.IsMatch(commands[i], "R\"[a-zA-Z0-9]+\""))
+                    {
+                        this._rename = true;
+                        this._replacementName = commands[i].Substring(2, commands[i].Length - 3);  // everything but the first 2 and the last char
+                    }
+                }
+                return 0;
             }
         }
 
@@ -193,6 +219,7 @@ namespace IngameScript
 
             _leadingZeros = _ini.Get("Nebork's Renaming Script", "LeadingZeros").ToBoolean();
 
+            // Loads the input for every block group
             foreach (BlockGroup blockGroup in blockGroups)
             {
                 blockGroup.Command = _ini.Get("Nebork's Renaming Script", blockGroup.GroupName).ToString();
@@ -202,7 +229,11 @@ namespace IngameScript
             // Main loop, iterates every block group and renames it according to their settings.
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                blockGroup.Rename();
+                if(blockGroup.Rename() == -1)
+                {
+                    Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
+                    break;
+                }
             }
 
 
