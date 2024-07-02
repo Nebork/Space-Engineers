@@ -1,3 +1,70 @@
+Program.cs
+  #01 using System.Text.RegularExpressions;  // can be implemented, but the whole namespace is needed
+
+  #02 Nebork's Renaming Script This script is used to rename every block uniformly in the control panel. 
+      This is extremely useful, if you care about proper naming and organizing blocks WITHOUT having to rename 100+ blocks manually.
+
+  #03 Used to go over every group
+
+  #04  Stores all given data and handles renaming
+
+  #05  Used in the custom data and to find the right group
+
+  #06 maybe add indexer over block members to access every member
+
+  #07 Settings processed from Command, see Process()
+
+  #08 Constructor, adding it to the global variables
+
+  #09 Initialises the list and puts in first block.
+
+  #10 Main function. Renames every block in the group with the given settings.
+
+  #11 creating futureName
+
+  #12 Processes the settings from Command  // TODO finish
+
+  #13 Checks if input is not valid, good luck with Regex :D
+
+  #14 everything but the first 2 and the last char
+
+  #15 Creates the blockGroups of the current state  TODO is dependent on workOnSubgrids. Just add parameter and filter allBlocks dependently
+
+  #16 Clears both list of any old, unused members
+
+  #17 Get all blocks and prepare for assignment to groups.
+
+  #18 Loop to assign every block to a group or create a new one.
+
+  #19 no group with this name found
+
+  #20 there already is a group with this name, add the block
+
+  #21 Generates the Custom Data based on the blockGroups
+
+  #22 For just adding the block groups to the current custom data
+
+  #23 add the check, that only NEW groups are added
+
+  #24 Runs at the start of the game or every time it is recompiled (edit code or press recompile)
+      Shall check and generate the custom data
+
+  #25 Runs every time someone presses run. Shall fetch all the blocks and put them into the groups processes the command string and uses it to rename all the blocks of a group
+
+  #26 maybe use update source to differentiate from run from program (fresh start) or run from command
+
+  #27 _ini needed global?
+
+  #28 Try to parse the ini
+
+  #29 Read all settings
+
+  #30 Loads the input for every block group
+
+  #31 Main loop, iterates every block group and renames it according to their settings.
+
+
+
 Custom Data:
   Instroduction
   With this script it is possible to set a naming basis for an entire ship or a station at once and have all of the blocks named and set properly.
