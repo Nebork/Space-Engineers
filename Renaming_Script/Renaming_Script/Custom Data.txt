@@ -1,4 +1,5 @@
 [Nebork's Renaming Script]
+
 ; -------------------Global Settings--------------------
 GridName = 
 WorkOnSubgrids = false
