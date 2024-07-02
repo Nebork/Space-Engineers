@@ -1,38 +1,13 @@
 [Nebork's Renaming Script]
-
-; With this script it is possible to set a naming basis for an entire ship or a station at once and have all of the blocks named and set properly.
-; It uses a tag system, meaning after every type of functional block you give the tags of how you want them to be named and which functions to set.
-; A list of all tags with description is given below
-
-; ------------------------------------------------------
 ; -------------------Global Settings--------------------
-; ------------------------------------------------------
-
-; Defines the name of the grid which shall be renamed. If empty uses the grid of this programmable block.
 GridName = 
-
-; Decides if all subgrids shall be renamed uniformely. [true/false]
-; USE WITH CAUTION!
 WorkOnSubgrids = false
-
-; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
 Prefix = [HRP]
 Postfix = 
-
-; If true, adds leading zeros to numberings if the number of items is greater than 10. Leads to better sorting in terminal. [true/false]
 LeadingZeros = true
-
-; If true, converts all numbering to roman numerals. Overwrites LeadingZeros. [true/false]
 RomanNumerals = false
 
-; TODO add further global settings
-
-; ------------------------------------------------------
 ; -------------------Block Settings---------------------
-; ------------------------------------------------------
-; Write your wanted tags behind every block group the way you like it
-; Order of tags is not required.
-
 ; H: Show on HUD
 ; T: Show in terminal
 ; I: Show in inventory
