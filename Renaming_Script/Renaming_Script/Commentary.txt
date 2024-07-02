@@ -1,0 +1,26 @@
+Custom Data:
+  Instroduction
+  With this script it is possible to set a naming basis for an entire ship or a station at once and have all of the blocks named and set properly.
+  It uses a tag system, meaning after every type of functional block you give the tags of how you want them to be named and which functions to set.
+  A list of all tags with description is given below
+
+  GridName
+  Defines the name of the grid which shall be renamed. If empty uses the grid of this programmable block.
+
+  WorkOnSubgrids / USE WITH CAUTION
+  Decides if all subgrids shall be renamed uniformely. [true/false]
+
+  Prefix / Postfix (Suffix)
+  Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
+
+  LeadingZeros
+  If true, adds leading zeros to numberings if the number of items is greater than 10. Leads to better sorting in terminal. [true/false]
+
+  RomanNumerals
+  If true, converts all numbering to roman numerals. Overwrites LeadingZeros. [true/false]
+
+  BlockSettings
+  Write your wanted tags behind every block group the way you like it
+  Order of tags is not required.
+
+  
