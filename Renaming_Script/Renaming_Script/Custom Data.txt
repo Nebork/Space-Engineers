@@ -2,21 +2,7 @@
 
 ; With this script it is possible to set a naming basis for an entire ship or a station at once and have all of the blocks named and set properly.
 ; It uses a tag system, meaning after every type of functional block you give the tags of how you want them to be named and which functions to set.
-; Order of tags is not required.
 ; A list of all tags with description is given below
-
-
-; H: Show on HUD
-; T: Show in terminal
-; I: Show in inventory
-; C: Use conveyor system  // TODO Usually always true, should I change the tag to only be needed if not wanted to use the conveyor? Would be more confusing.
-; N: Number all blocks, "Refineries: N" leads to the refineries being named "Refinery 1", "Refinery 2", ... // TODO Should I consider 01, 02, ... if >10? Add a setting?
-; R: Renames the base name to a given string. Example: 'Refineries: RG "Smelter"' leads to all Refineries being named to 'Smelter' in addition to prefixes etc.
-; TODO add more, what is needed/wanted. Even some specific, which work for a set of blocks only. A parameter "-"
-;
-; Example: Refineries: GICNR "Smelter"
-; All refineries are shown in the inventory and use the conveyor network. They are called "Smelter 1", "Smelter 2", ...
-
 
 ; ------------------------------------------------------
 ; -------------------Global Settings--------------------
@@ -26,21 +12,15 @@
 GridName = 
 
 ; Decides if all subgrids shall be renamed uniformely. [true/false]
-USE WITH CAUTION!
+; USE WITH CAUTION!
 WorkOnSubgrids = false
 
-; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
-Prefix = (HRP)
+; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. Leave empty if nothing is wanted.
+Prefix = [HRP]
 Postfix = 
-
-; Removes DLC block naming. "Warfare Battery" is named to "Battery" etc. [true/false]
-RemoveDlcNaming = true
 
 ; If true, adds leading zeros to numberings if the number of items is greater than 10. Leads to better sorting in terminal. [true/false]
 LeadingZeros = true
-
-; If true, converts all numbering to roman numerals. Overwrites LeadingZeros. [true/false]
-RomanNumerals = false
 
 ; TODO add further global settings
 
@@ -48,23 +28,15 @@ RomanNumerals = false
 ; -------------------Block Settings---------------------
 ; ------------------------------------------------------
 ; Write your wanted tags behind every block group the way you like it
-; Some groups combine other groups, e.g. "Large Cargoes" and "Small Cargoes" are also part of "All Cargoes".
-; The settings work for all, however more specific groups overwrite the settings of less specific groups
-; If "show on HUD" is on for "All Cargoes", but not for "Small Cargoes", it is set on for "Large Cargoes" and "Medium Cargoes", but not for "Small Cargoes"
+; Order of tags is not required.
 
-; -------------------Production Blocks------------------
-Refineries = ICN
-Assembler = ICN
-H2/O2 Generator = IC
-; -------------------Cargo Blocks-----------------------
-Large Cargoes = ICN
-Medium Caroes = ICN
-Small Cargoes = IC
-; -------------------Storage Tanks----------------------
-; All Tanks = 
-; All H2 Tanks = 
-; Large H2 Tanks = 
-; Small H2 Tanks = 
-; O2 Tanks = 
+; H: Show on HUD
+; T: Show in terminal
+; I: Show in inventory
+; N: Number all blocks, "Refinery = -N" leads to the refineries being named "Refinery 1", "Refinery 2", ...
+; R: Renames the base name to a given string. Example: 'Refineries: -R "Smelter"' leads to all Refineries being named to 'Smelter' in addition to prefixes etc.
+; B: Show in toolbar config
+; S: Skips the whole block group. No block will be touched!
 
-Misc = 
+; Example: Refinery = -I -C -N -R "Smelter"
+; All refineries are numbered, shown in the inventory and use the conveyor network. They are called "Smelter 1", "Smelter 2", ...
