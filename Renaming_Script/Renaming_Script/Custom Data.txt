@@ -15,7 +15,7 @@ GridName =
 ; USE WITH CAUTION!
 WorkOnSubgrids = false
 
-; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. "" if nothing is wanted.
+; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. Leave empty if nothing is wanted.
 Prefix = [HRP]
 Postfix = 
 
@@ -37,7 +37,6 @@ LeadingZeros = true
 ; R: Renames the base name to a given string. Example: 'Refineries: -R "Smelter"' leads to all Refineries being named to 'Smelter' in addition to prefixes etc.
 ; B: Show in toolbar config
 ; S: Skips the whole block group. No block will be touched!
-; TODO add more, what is needed/wanted.
-;
+
 ; Example: Refinery = -I -C -N -R "Smelter"
 ; All refineries are numbered, shown in the inventory and use the conveyor network. They are called "Smelter 1", "Smelter 2", ...

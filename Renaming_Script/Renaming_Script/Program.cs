@@ -55,7 +55,6 @@ namespace IngameScript
             public string GroupName { get; set; } = string.Empty;  // Used in the custom data and to find the right group
             public string Command { get; set; } = string.Empty;
 
-            // TODO maybe add indexer over block members to access every member
             public List<IMyTerminalBlock> groupMembers;
 
 
@@ -118,7 +117,7 @@ namespace IngameScript
                 return 0;
             }
 
-            // Processes the settings from Command  // TODO finish
+
             private int Process()
             {
                 this.Command = this.Command.Replace(" ", "");
@@ -207,10 +206,7 @@ namespace IngameScript
         // TODO maybe use update source to differentiate from run from program (fresh start) or run from command
         public void Main(/*string argument, UpdateType updateSource*/)
         {
-            string debug = "";
-
             CreateBlockGroups();
-
 
             MyIni _ini = new MyIni();  // TODO _ini needed global?
 
@@ -222,7 +218,7 @@ namespace IngameScript
                 throw new Exception(result.ToString());
             }
 
-            // Read all settings
+            // Read all global settings
             _prefix = _ini.Get("Nebork's Renaming Script", "Prefix").ToString();
             _postfix = _ini.Get("Nebork's Renaming Script", "Postfix").ToString();
 
@@ -244,9 +240,6 @@ namespace IngameScript
                     break;
                 }
             }
-
-
-            Echo(debug);
         }
 
         // COPY UNTIL HERE
