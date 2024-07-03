@@ -38,5 +38,5 @@ LeadingZeros = true
 ; B: Show in toolbar config
 ; S: Skips the whole block group. No block will be touched!
 
-; Example: Refinery = -I -C -N -R "Smelter"
-; All refineries are numbered, shown in the inventory and use the conveyor network. They are called "Smelter 1", "Smelter 2", ...
+; Example: Refinery = -I -N -R "Smelter"
+; All refineries are numbered, shown in the inventory. They are called "Smelter 1", "Smelter 2", ...

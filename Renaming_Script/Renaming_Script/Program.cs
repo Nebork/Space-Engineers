@@ -82,8 +82,8 @@ namespace IngameScript
             // Main function. Renames every block in the group with the given settings.
             public int Rename()
             {
-                if(this.Process() == -1) { return -1; }  // returns -1 if process fails
-                if(this.Command.Contains("-S")) { return 0; }  // if skip is used
+                if (this.Command.Contains("-S")) { return 0; }  // if skip is used
+                if (this.Process() == -1) { return -1; }  // returns -1 if process fails
 
                 for(int i = 0; i < groupMembers.Count; i++)
                 {
