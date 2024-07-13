@@ -1,42 +1,54 @@
 [Nebork's Renaming Script]
 
-; With this script it is possible to set a naming basis for an entire ship or a station at once and have all of the blocks named and set properly.
-; It uses a tag system, meaning after every type of functional block you give the tags of how you want them to be named and which functions to set.
-; A list of all tags with description is given below
+; This script gives every functional block on this grid a uniform naming.
+; You can also set a lot of the properties at once.
+; The script uses a tag system, you can choose everything!
+; A list of all tags with description is given below.
+; An example is given at TODO
+; I advise to save these custom data once you are satisfied.
+
 
 ; ------------------------------------------------------
 ; -------------------Global Settings--------------------
 ; ------------------------------------------------------
 
-; Defines the name of the grid which shall be renamed. If empty uses the grid of this programmable block.
+; Defines the name of the grid which shall be renamed.
+; If empty uses the grid of this programmable block.
 GridName = 
 
 ; Decides if all subgrids shall be renamed uniformely. [true/false]
 ; USE WITH CAUTION!
 WorkOnSubgrids = false
 
-; Sets a pre-/postfix for every block. Advised to be different for every ship/station to properly identify every block. Leave empty if nothing is wanted.
+; Sets a prefix and postfix(suffix) for every block.
+; Leave empty if nothing is wanted.
+; I prefer unique prefixes for every grid.
 Prefix = [HRP]
 Postfix = 
 
-; If true, adds leading zeros to numberings if the number of items is greater than 10. Leads to better sorting in terminal. [true/false]
+; If true, adds leading zeros to numberings of blocks if needed.
+; This leads to better sorting in the terminal. [true/false]
 LeadingZeros = true
 
-; TODO add further global settings
+; If true, adds prefix and postfix(suffix) to skipped groups.
+; [true/false]
+SimpleSkip = false
+
 
 ; ------------------------------------------------------
 ; -------------------Block Settings---------------------
 ; ------------------------------------------------------
-; Write your wanted tags behind every block group the way you like it
+; Write your wanted tags behind every block type the way you like it
 ; Order of tags is not required.
 
 ; H: Show on HUD
 ; T: Show in terminal
 ; I: Show in inventory
-; N: Number all blocks, "Refinery = -N" leads to the refineries being named "Refinery 1", "Refinery 2", ...
-; R: Renames the base name to a given string. Example: 'Refineries: -R "Smelter"' leads to all Refineries being named to 'Smelter' in addition to prefixes etc.
+; N: Number all blocks of this type
+; R: Renames the base name to a given string in quotation marks
 ; B: Show in toolbar config
-; S: Skips the whole block group. No block will be touched!
+; S: Skips the whole block type. No block will be touched!
 
 ; Example: Refinery = -I -N -R "Smelter"
-; All refineries are numbered, shown in the inventory. They are called "Smelter 1", "Smelter 2", ...
+; All refineries are shown in the inventory and numbered.
+; They are called "Smelter 1", "Smelter 2", ...
