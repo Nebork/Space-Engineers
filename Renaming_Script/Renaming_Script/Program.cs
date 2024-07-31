@@ -18,6 +18,7 @@ using VRage.Game.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame.Utilities;
 using VRage.Game.ObjectBuilders.Definitions;
 using VRageMath;
+using static IngameScript.Program;
 
 namespace IngameScript
 {
@@ -191,7 +192,7 @@ namespace IngameScript
             // TODO add the check, that only NEW groups are added
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                addition += $"\n {blockGroup.GroupName} = ";
+                addition += $"\n{blockGroup.GroupName} = {blockGroup.Command}";
             }
 
             addition += "\n";
@@ -199,9 +200,32 @@ namespace IngameScript
             Me.CustomData += addition;
         }
 
+        // Loads the given block group settings and removes them from the custom data.
         public void LoadBlockGroups()
         {
+            string cd = Me.CustomData;
+            string[] cdLines = cd.Split('\n');
 
+            bool reachedBlockSettings = false;
+            bool changed = false;
+
+            for (int i = 0; i < cdLines.Length; i++)
+            {
+                if (cdLines[i] == "[Block Settings]")
+                {
+                    reachedBlockSettings = true;
+                }
+                else if (reachedBlockSettings && !cdLines[i].StartsWith(";") && cdLines[i] != "")
+                {
+                    if (changed == false)
+                    {
+                        changed = true;
+                        Me.CustomData = string.Join("\n", cdLines.Take(i - 1));  // Only the first i-1 elements, so without settings
+                    }
+                    string[] words = cdLines[i].Replace(" ", "").Split(new char[] { '=' });
+                    new BlockGroup(words[0]) { Command = words[1] };
+                }
+            }
         }
 
 
@@ -214,6 +238,7 @@ namespace IngameScript
             // Clears both list of any old, unused members
             blockGroups.Clear();
 
+            LoadBlockGroups();
             CreateBlockGroups();
             AddBlockGroupsToCd();
         }
@@ -255,7 +280,7 @@ namespace IngameScript
             // Main loop, iterates every block group and renames it according to their settings.
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                if(blockGroup.Rename() == -1)
+                if (blockGroup.Rename() == -1)
                 {
                     Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
                     break;
