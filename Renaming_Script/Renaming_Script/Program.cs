@@ -73,7 +73,7 @@ namespace IngameScript
                 this.GroupName = groupname;
                 blockGroups.Add(this);
 
-                groupMembers = new List<IMyTerminalBlock>() {};  // Initialises the list and puts in first block.
+                groupMembers = new List<IMyTerminalBlock>() { };  // Initialises the list and puts in first block.
             }
 
 
@@ -83,7 +83,7 @@ namespace IngameScript
                 if (this.Command.Contains("-S")) { return 0; }  // If skip is used
                 if (this.Process() == -1) { return -1; }  // Returns -1 if process fails
 
-                for(int i = 0; i < groupMembers.Count; i++)
+                for (int i = 0; i < groupMembers.Count; i++)
                 {
                     // Renaming
                     string futureName = "";
@@ -177,7 +177,7 @@ namespace IngameScript
                     blockGroups[index].groupMembers.Add(terminalBlock);
                 }
 
-                blockGroups.Sort((x,y) => x.GroupName.CompareTo(y.GroupName));  // Sort the list
+                blockGroups.Sort((x, y) => x.GroupName.CompareTo(y.GroupName));  // Sort the list
             }
         }
 
