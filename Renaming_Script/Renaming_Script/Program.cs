@@ -147,8 +147,6 @@ namespace IngameScript
         // Creates the blockGroups of the current state  TODO is dependent on workOnSubgrids. Just add parameter and filter allBlocks dependently
         public void CreateBlockGroups()
         {
-            // Clears both list of any old, unused members
-            blockGroups.Clear();
 
             // Get all blocks and prepare for assignment to groups.
             List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
@@ -184,7 +182,7 @@ namespace IngameScript
 
 
         // Generates the Custom Data based on the blockGroups
-        public void CreateCustomData()
+        public void AddBlockGroupsToCd()
         {
             // For just adding the block groups to the current custom data
             string addition = "\n";
@@ -192,10 +190,17 @@ namespace IngameScript
             // TODO add the check, that only NEW groups are added
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                addition += $"{blockGroup.GroupName} = \n";
+                addition += $"\n {blockGroup.GroupName} = ";
             }
 
+            addition += "\n";
+
             Me.CustomData += addition;
+        }
+
+        public void LoadBlockGroups()
+        {
+
         }
 
 
@@ -204,8 +209,12 @@ namespace IngameScript
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.None;
+
+            // Clears both list of any old, unused members
+            blockGroups.Clear();
+
             CreateBlockGroups();
-            CreateCustomData();
+            AddBlockGroupsToCd();
         }
 
 
@@ -214,6 +223,9 @@ namespace IngameScript
         // TODO maybe use update source to differentiate from run from program (fresh start) or run from command
         public void Main(/*string argument, UpdateType updateSource*/)
         {
+            // Clears both list of any old, unused members
+            blockGroups.Clear();
+
             CreateBlockGroups();
 
             MyIni _ini = new MyIni();  // TODO _ini needed global?
