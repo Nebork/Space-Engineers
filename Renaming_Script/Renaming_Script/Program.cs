@@ -227,15 +227,15 @@ namespace IngameScript
             }
 
             // Read all global settings
-            _prefix = _ini.Get("Nebork's Renaming Script", "Prefix").ToString();
-            _postfix = _ini.Get("Nebork's Renaming Script", "Postfix").ToString();
+            _prefix = _ini.Get("Global Settings", "Prefix").ToString();
+            _postfix = _ini.Get("Global Settings", "Postfix").ToString();
 
-            _leadingZeros = _ini.Get("Nebork's Renaming Script", "LeadingZeros").ToBoolean();
+            _leadingZeros = _ini.Get("Global Settings", "LeadingZeros").ToBoolean();
 
             // Loads the input for every block group
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                blockGroup.Command = _ini.Get("Nebork's Renaming Script", blockGroup.GroupName).ToString();
+                blockGroup.Command = _ini.Get("Block Settings", blockGroup.GroupName).ToString();
             }
 
 
