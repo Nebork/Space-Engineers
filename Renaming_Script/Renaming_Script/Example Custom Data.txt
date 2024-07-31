@@ -40,7 +40,7 @@ SimpleSkip = false
 [Block Settings]
 ; ============================
 
-; Write your wanted tags behind every block type the way you like it
+; Write your wanted tags behind every block type the way you like it.
 ; Order of tags is not required.
 
 ; H: Show on HUD
