@@ -8,7 +8,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.Linq;
 using System.Text;
-// using System.Text.RegularExpressions;  // can be implemented, but the whole namespace is needed
 using VRage;
 using VRage.Collections;
 using VRage.Game;
@@ -81,8 +80,8 @@ namespace IngameScript
             // Main function. Renames every block in the group with the given settings.
             public int Rename()
             {
-                if (this.Command.Contains("-S")) { return 0; }  // if skip is used
-                if (this.Process() == -1) { return -1; }  // returns -1 if process fails
+                if (this.Command.Contains("-S")) { return 0; }  // If skip is used
+                if (this.Process() == -1) { return -1; }  // Returns -1 if process fails
 
                 for(int i = 0; i < groupMembers.Count; i++)
                 {
@@ -120,7 +119,7 @@ namespace IngameScript
             private int Process()
             {
                 this.Command = this.Command.Replace(" ", "");
-                // Checks if input is not valid, good luck with Regex :D
+                // Checks if input is not valid, good luck with the Regex :D
                 if (this.Command != "" && !System.Text.RegularExpressions.Regex.IsMatch(this.Command, "(-[NTIHBS]|(-R\"[a-zA-Z0-9]+\"))+"))
                 {
                     return -1;
@@ -138,7 +137,7 @@ namespace IngameScript
                     else if (System.Text.RegularExpressions.Regex.IsMatch(commands[i], "R\"[a-zA-Z0-9]+\""))
                     {
                         this._rename = true;
-                        this._replacementName = commands[i].Substring(2, commands[i].Length - 3);  // everything but the first 2 and the last char
+                        this._replacementName = commands[i].Substring(2, commands[i].Length - 3);  // Everything but the first 2 and the last char
                     }
                 }
                 return 0;
@@ -168,12 +167,12 @@ namespace IngameScript
                     }
                 }
 
-                if (index == -1)  // no group with this name found
+                if (index == -1)  // No group with this name found
                 {
                     new BlockGroup(easyBlockType);
                     blockGroups.Last().groupMembers.Add(terminalBlock);
                 }
-                else  // there already is a group with this name, add the block
+                else  // There already is a group with this name, just add the block
                 {
                     blockGroups[index].groupMembers.Add(terminalBlock);
                 }
@@ -183,13 +182,12 @@ namespace IngameScript
         }
 
 
-        // Generates the Custom Data based on the blockGroups
+        // Generates the Custom Data based on the current blockGroups
         public void AddBlockGroupsToCd()
         {
             // For just adding the block groups to the current custom data
             string addition = "\n";
 
-            // TODO add the check, that only NEW groups are added
             foreach (BlockGroup blockGroup in blockGroups)
             {
                 addition += $"\n{blockGroup.GroupName} = {blockGroup.Command}";
@@ -235,7 +233,7 @@ namespace IngameScript
         {
             Runtime.UpdateFrequency = UpdateFrequency.None;
 
-            // Clears both list of any old, unused members
+            // Clears list of any old, unused members
             blockGroups.Clear();
 
             LoadBlockGroups();
@@ -245,16 +243,16 @@ namespace IngameScript
 
 
         // Runs every time someone presses run. Shall fetch all the blocks and put them into the groups
-        // processes the command string and uses it to rename all the blocks of a group
+        // Processes the command string and uses it to rename all the blocks of a group
         // TODO maybe use update source to differentiate from run from program (fresh start) or run from command
         public void Main(/*string argument, UpdateType updateSource*/)
         {
-            // Clears both list of any old, unused members
+            // Clears list of any old, unused members
             blockGroups.Clear();
 
             CreateBlockGroups();
 
-            MyIni _ini = new MyIni();  // TODO _ini needed global?
+            MyIni _ini = new MyIni();
 
             // Try to parse the ini
             MyIniParseResult result;
