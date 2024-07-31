@@ -47,7 +47,6 @@ namespace IngameScript
 
         // Used to go over every group
         readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
-        readonly static List<string> blockGroupNames = new List<string>();
 
         // Stores all given data and handles renaming
         public class BlockGroup
@@ -73,7 +72,6 @@ namespace IngameScript
             {
                 this.GroupName = groupname;
                 blockGroups.Add(this);
-                blockGroupNames.Add(groupname);
 
                 groupMembers = new List<IMyTerminalBlock>() { firstBlock };  // Initialises the list and puts in first block.
             }
@@ -151,7 +149,6 @@ namespace IngameScript
         {
             // Clears both list of any old, unused members
             blockGroups.Clear();
-            blockGroupNames.Clear();
 
             // Get all blocks and prepare for assignment to groups.
             List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
@@ -162,14 +159,23 @@ namespace IngameScript
             {
                 string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
 
-                int i = blockGroupNames.IndexOf(easyBlockType);
-                if (i == -1)  // no group with this name found
+                int index = -1;
+
+                for (int i = 0; i < blockGroups.Count; i++)
+                {
+                    if(easyBlockType == blockGroups[i].GroupName)
+                    {
+                        index = i; break;
+                    }
+                }
+
+                if (index == -1)  // no group with this name found
                 {
                     new BlockGroup(terminalBlock, easyBlockType);
                 }
                 else  // there already is a group with this name, add the block
                 {
-                    blockGroups[i].groupMembers.Add(terminalBlock);
+                    blockGroups[index].groupMembers.Add(terminalBlock);
                 }
             }
         }
