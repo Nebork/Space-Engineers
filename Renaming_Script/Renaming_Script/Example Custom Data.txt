@@ -24,7 +24,7 @@ WorkOnSubgrids = false
 ; Sets a prefix and postfix(suffix) for every block.
 ; Leave empty if nothing is wanted.
 ; I prefer unique prefixes for every grid.
-Prefix = [HRP]
+Prefix = [SHP]
 Postfix = 
 
 ; If true, adds leading zeros to numberings of blocks if needed.
