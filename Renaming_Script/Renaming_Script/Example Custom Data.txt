@@ -5,7 +5,7 @@
 ; The script uses a tag system, you can choose everything!
 ; A list of all tags with description is given below.
 ; An example is given at 
-; https://github.com/Nebork/Space-Engineers/blob/main/Renaming_Script/Renaming_Script/Example%20Custom%20Data.txt
+; https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script
 ; I advise to save these custom data once you are satisfied.
 
 
@@ -33,7 +33,7 @@ LeadingZeros = true
 
 ; If true, adds prefix and postfix(suffix) to skipped groups.
 ; [true/false]
-SimpleSkip = false
+SoftSkip = false
 
 
 ; ============================
@@ -43,13 +43,13 @@ SimpleSkip = false
 ; Write your wanted tags behind every block type the way you like it.
 ; Order of tags is not required.
 
+; B: Show in toolbar config
 ; H: Show on HUD
-; T: Show in terminal
 ; I: Show in inventory
 ; N: Number all blocks of this type
 ; R: Renames the base name to a given string in quotation marks
-; B: Show in toolbar config
 ; S: Skips the whole block type. No block will be touched!
+; T: Show in terminal
 
 ; Example: Refinery = -I -N -R "Smelter"
 ; All refineries are shown in the inventory and numbered.
