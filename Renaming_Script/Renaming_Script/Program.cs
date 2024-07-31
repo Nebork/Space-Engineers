@@ -68,12 +68,12 @@ namespace IngameScript
             private string _replacementName;  // "x"
 
             // Constructor, adding it to the global variables
-            public BlockGroup(IMyTerminalBlock firstBlock, string groupname = "")
+            public BlockGroup(string groupname = "")
             {
                 this.GroupName = groupname;
                 blockGroups.Add(this);
 
-                groupMembers = new List<IMyTerminalBlock>() { firstBlock };  // Initialises the list and puts in first block.
+                groupMembers = new List<IMyTerminalBlock>() {};  // Initialises the list and puts in first block.
             }
 
 
@@ -169,7 +169,8 @@ namespace IngameScript
 
                 if (index == -1)  // no group with this name found
                 {
-                    new BlockGroup(terminalBlock, easyBlockType);
+                    new BlockGroup(easyBlockType);
+                    blockGroups.Last().groupMembers.Add(terminalBlock);
                 }
                 else  // there already is a group with this name, add the block
                 {
