@@ -120,7 +120,7 @@ namespace IngameScript
             {
                 this.Command = this.Command.Replace(" ", "");
                 // Checks if input is not valid, good luck with Regex :D
-                if(this.Command != "" && !System.Text.RegularExpressions.Regex.IsMatch(this.Command, "(-[NTIHBS]|(-R\"[a-zA-Z0-9]+\"))+"))
+                if (this.Command != "" && !System.Text.RegularExpressions.Regex.IsMatch(this.Command, "(-[NTIHBS]|(-R\"[a-zA-Z0-9]+\"))+"))
                 {
                     return -1;
                 }
@@ -163,7 +163,7 @@ namespace IngameScript
 
                 for (int i = 0; i < blockGroups.Count; i++)
                 {
-                    if(easyBlockType == blockGroups[i].GroupName)
+                    if (easyBlockType == blockGroups[i].GroupName)
                     {
                         index = i; break;
                     }
@@ -177,6 +177,8 @@ namespace IngameScript
                 {
                     blockGroups[index].groupMembers.Add(terminalBlock);
                 }
+
+                blockGroups.Sort((x,y) => x.GroupName.CompareTo(y.GroupName));  // Sort the list
             }
         }
 
