@@ -1,3 +1,6 @@
+; WORK IN PROGRESS (August 1st 2024)
+; THERE ARE NO SETTINGS YET!
+
 ; Nebork's Renaming Script
 
 ; This script gives every functional block on this grid a uniform naming.
