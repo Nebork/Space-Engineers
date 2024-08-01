@@ -48,6 +48,8 @@ namespace IngameScript
 
         static bool _leadingZeros;
 
+        static bool _softSkip;
+
         static string _gridName;
         static bool _workOnSubgrids;
 
@@ -86,7 +88,9 @@ namespace IngameScript
             // Main function. Renames every block in the group with the given settings.
             public int Rename()
             {
-                if (this.Command.Contains("-S")) { return 0; }  // If skip is used
+                bool skipped = this.Command.Contains("-S");
+
+                if (skipped && !_softSkip) { return 0; }  // If skip is used and we force the skip
                 if (this.Process() == -1) { return -1; }  // Returns -1 if process fails
 
                 for (int i = 0; i < groupMembers.Count; i++)
@@ -94,21 +98,30 @@ namespace IngameScript
                     // Renaming
                     string futureName = "";
 
-                    // creating futureName
-                    futureName += $"{_prefix}";
-                    if (_rename) { futureName += $" {_replacementName}"; }
-                    else { futureName += $" {groupMembers[i].DefinitionDisplayNameText}"; }
-                    if (_numbering)
+                    if (!skipped)
                     {
-                        if (!_leadingZeros) { futureName += $" {i + 1}"; }
-                        else
-                        {
-                            int numberOfZeros = (int)Math.Log10(groupMembers.Count) - (int)Math.Log10(i + 1);
-                            futureName += $" {String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
-                        }
-                    }
-                    futureName += $" {_postfix}";
+                        // creating futureName
+                        if (_prefix != "") { futureName += $"{_prefix} "; }
 
+                        if (_rename) { futureName += $"{_replacementName}"; }
+                        else { futureName += $"{groupMembers[i].DefinitionDisplayNameText}"; }
+                        if (_numbering)
+                        {
+                            if (!_leadingZeros) { futureName += $" {i + 1}"; }
+                            else
+                            {
+                                int numberOfZeros = (int)Math.Log10(groupMembers.Count) - (int)Math.Log10(i + 1);
+                                futureName += $" {String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
+                            }
+                        }
+                        if (_postfix != "") { futureName += $" {_postfix}"; }
+                    }
+                    else
+                    {
+                        futureName = groupMembers[i].CustomName;
+                        if (!futureName.StartsWith(_prefix) && _prefix != "") { futureName = $"{_prefix} {futureName}"; }
+                        if (!futureName.EndsWith(_postfix) && _postfix != "") { futureName = $"{futureName} {_postfix}"; }
+                    }
                     groupMembers[i].CustomName = futureName;
 
 
@@ -270,13 +283,16 @@ namespace IngameScript
 
             _leadingZeros = _ini.Get("Global Settings", "LeadingZeros").ToBoolean();
 
+            _softSkip = _ini.Get("Global Settings", "SoftSkip").ToBoolean();
+
+            // If an argument is given, read it!
             if (argument != "")
             {
                 string[] names = argument.Split(',');
                 _gridName = names[0];
                 if (names.Length > 1) { _prefix = names[1]; }
             }
-            else
+            else  // If no argument is given
             {
                 _gridName = _ini.Get("Global Settings", "GridName").ToString();
                 if (_gridName == "") { _gridName = Me.CubeGrid.CustomName; }

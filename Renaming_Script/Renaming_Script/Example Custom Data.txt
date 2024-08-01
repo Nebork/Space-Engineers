@@ -34,9 +34,9 @@ Postfix =
 ; This leads to better sorting in the terminal. [true/false]
 LeadingZeros = true
 
-; If true, adds prefix and postfix(suffix) to skipped groups.
+; If true, adds only prefix and postfix(suffix) to skipped groups.
 ; [true/false]
-SoftSkip = false
+SoftSkip = true
 
 
 ; ============================
