@@ -8,6 +8,9 @@
 ; An example is given at:
 ; https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script
 
+; If you run the script with an argument, the script will interpret
+; it as the GridName. Adding a second argument (separated by a ","),
+; will define it's prefix.
 
 ; ============================
 [Global Settings]
