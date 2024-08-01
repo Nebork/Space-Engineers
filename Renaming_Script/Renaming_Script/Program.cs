@@ -252,8 +252,7 @@ namespace IngameScript
 
         // Runs every time someone presses run. Shall fetch all the blocks and put them into the groups
         // Processes the command string and uses it to rename all the blocks of a group
-        // TODO maybe use update source to differentiate from run from program (fresh start) or run from command
-        public void Main(/*string argument, UpdateType updateSource*/)
+        public void Main(string argument/*, UpdateType updateSource*/)
         {
             MyIni _ini = new MyIni();
 
@@ -271,8 +270,17 @@ namespace IngameScript
 
             _leadingZeros = _ini.Get("Global Settings", "LeadingZeros").ToBoolean();
 
-            _gridName = _ini.Get("Global Settings", "GridName").ToString();
-            if (_gridName == "") { _gridName = Me.CubeGrid.CustomName; }
+            if (argument != "")
+            {
+                string[] names = argument.Split(',');
+                _gridName = names[0];
+                if (names.Length > 1) { _prefix = names[1]; }
+            }
+            else
+            {
+                _gridName = _ini.Get("Global Settings", "GridName").ToString();
+                if (_gridName == "") { _gridName = Me.CubeGrid.CustomName; }
+            }
             _workOnSubgrids = _ini.Get("Global Settings", "WorkOnSubgrids").ToBoolean();
 
             // Clears list of any old, unused members
