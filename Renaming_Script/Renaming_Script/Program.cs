@@ -248,6 +248,75 @@ namespace IngameScript
         }
 
 
+        // Creates new custom data. TODO find a smarter way to do this. I am open for suggestions
+        public void CreateCustomData()
+        {
+            string[] cdText = {
+                "; Nebork's Renaming Script",
+                "",
+                "; This script gives every functional block on this grid a uniform naming.",
+                "; You can also set a lot of the properties at once.",
+                "; The script uses a tag system, you can choose everything!",
+                "; A list of all tags with description is given below.",
+                "; I advise to save these custom data once you are satisfied.",
+                "; An example is given at:",
+                "; https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script",
+                "",
+                "; If you run the script with an argument, the script will interpret",
+                "; it as the GridName. Adding a second argument (separated by a \",\"),",
+                "; will define it's prefix.",
+                "",
+                "",
+                "; ============================",
+                "[Global Settings]",
+                "; ============================",
+                "",
+                "; Defines the name of the grid which shall be renamed.",
+                "; If empty uses the grid of this programmable block.",
+                "GridName = ",
+                "",
+                "; Decides if all subgrids shall be renamed uniformely. [true/false]",
+                "; USE WITH CAUTION!",
+                "WorkOnSubgrids = false",
+                "",
+                "; Sets a prefix and postfix(suffix) for every block.",
+                "; Leave empty if nothing is wanted.",
+                "; I prefer unique prefixes for every grid.",
+                "Prefix = [SHP]",
+                "Postfix = ",
+                "",
+                "; If true, adds leading zeros to numberings of blocks if needed.",
+                "; This leads to better sorting in the terminal. [true/false]",
+                "LeadingZeros = true",
+                "",
+                "; If true, adds only prefix and postfix(suffix) to skipped groups.",
+                "; [true/false]",
+                "SoftSkip = true",
+                "",
+                "",
+                "; ============================",
+                "[Block Settings]",
+                "; ============================",
+                "",
+                "; Write your wanted tags behind every block type the way you like it.",
+                "; Order of tags is not required.",
+                "",
+                "; B: Show in toolbar config",
+                "; H: Show on HUD",
+                "; I: Show in inventory",
+                "; N: Number all blocks of this type",
+                "; R: Renames the base name to a given string in quotation marks",
+                "; S: Skips the whole block type. No block will be touched!",
+                "; T: Show in terminal",
+                "",
+                "; Example: Refinery = -I -N -R \"Smelter\"",
+                "; All refineries are shown in the inventory and numbered.",
+                "; They are called \"Smelter 1\", \"Smelter 2\", ..."
+            };
+            Me.CustomData = string.Join("\n", cdText);
+        }
+
+
         // Runs at the start of the game or every time it is recompiled (edit code or press recompile)
         // Shall check and generate the custom data
         public Program()
@@ -257,6 +326,7 @@ namespace IngameScript
             // Clears list of any old, unused members
             blockGroups.Clear();
 
+            if (Me.CustomData == "") { CreateCustomData(); }
             LoadBlockGroups();
             CreateBlockGroups(true);
             AddBlockGroupsToCd();
