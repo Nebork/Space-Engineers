@@ -48,6 +48,8 @@ namespace IngameScript
 
         static bool _leadingZeros;
 
+        static string _gridName;
+        static bool _workOnSubgrids;
 
         // Used to go over every group
         readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
@@ -149,7 +151,7 @@ namespace IngameScript
         }
 
         // Creates the blockGroups of the current state  TODO is dependent on workOnSubgrids. Just add parameter and filter allBlocks dependently
-        public void CreateBlockGroups()
+        public void CreateBlockGroups(bool forceAllBlocks)
         {
 
             // Get all blocks and prepare for assignment to groups.
@@ -159,30 +161,32 @@ namespace IngameScript
             // Loop to assign every block to a group or create a new one.
             foreach (IMyTerminalBlock terminalBlock in allBlocks)
             {
-                string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
-
-                int index = -1;
-
-                for (int i = 0; i < blockGroups.Count; i++)
+                if (forceAllBlocks || _workOnSubgrids || terminalBlock.CubeGrid.CustomName == _gridName)
                 {
-                    if (easyBlockType == blockGroups[i].GroupName)
+                    string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
+
+                    int index = -1;
+
+                    for (int i = 0; i < blockGroups.Count; i++)
                     {
-                        index = i; break;
+                        if (easyBlockType == blockGroups[i].GroupName)
+                        {
+                            index = i; break;
+                        }
+                    }
+
+                    if (index == -1)  // No group with this name found
+                    {
+                        new BlockGroup(easyBlockType);
+                        blockGroups.Last().groupMembers.Add(terminalBlock);
+                    }
+                    else  // There already is a group with this name, just add the block
+                    {
+                        blockGroups[index].groupMembers.Add(terminalBlock);
                     }
                 }
-
-                if (index == -1)  // No group with this name found
-                {
-                    new BlockGroup(easyBlockType);
-                    blockGroups.Last().groupMembers.Add(terminalBlock);
-                }
-                else  // There already is a group with this name, just add the block
-                {
-                    blockGroups[index].groupMembers.Add(terminalBlock);
-                }
-
-                blockGroups.Sort((x, y) => x.GroupName.CompareTo(y.GroupName));  // Sort the list
             }
+            blockGroups.Sort((x, y) => x.GroupName.CompareTo(y.GroupName));  // Sort the list
         }
 
 
@@ -241,7 +245,7 @@ namespace IngameScript
             blockGroups.Clear();
 
             LoadBlockGroups();
-            CreateBlockGroups();
+            CreateBlockGroups(true);
             AddBlockGroupsToCd();
         }
 
@@ -251,11 +255,6 @@ namespace IngameScript
         // TODO maybe use update source to differentiate from run from program (fresh start) or run from command
         public void Main(/*string argument, UpdateType updateSource*/)
         {
-            // Clears list of any old, unused members
-            blockGroups.Clear();
-
-            CreateBlockGroups();
-
             MyIni _ini = new MyIni();
 
             // Try to parse the ini
@@ -272,12 +271,19 @@ namespace IngameScript
 
             _leadingZeros = _ini.Get("Global Settings", "LeadingZeros").ToBoolean();
 
+            _gridName = _ini.Get("Global Settings", "GridName").ToString();
+            if (_gridName == "") { _gridName = Me.CubeGrid.CustomName; }
+            _workOnSubgrids = _ini.Get("Global Settings", "WorkOnSubgrids").ToBoolean();
+
+            // Clears list of any old, unused members
+            blockGroups.Clear();
+            CreateBlockGroups(false);
+
             // Loads the input for every block group
             foreach (BlockGroup blockGroup in blockGroups)
             {
                 blockGroup.Command = _ini.Get("Block Settings", blockGroup.GroupName).ToString();
             }
-
 
             // Main loop, iterates every block group and renames it according to their settings.
             foreach (BlockGroup blockGroup in blockGroups)

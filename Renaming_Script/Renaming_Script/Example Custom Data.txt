@@ -4,9 +4,9 @@
 ; You can also set a lot of the properties at once.
 ; The script uses a tag system, you can choose everything!
 ; A list of all tags with description is given below.
-; An example is given at 
-; https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script
 ; I advise to save these custom data once you are satisfied.
+; An example is given at:
+; https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script
 
 
 ; ============================
