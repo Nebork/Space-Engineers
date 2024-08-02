@@ -17,6 +17,7 @@ using VRage.Game.ModAPI.Ingame;
 using VRage.Game.ModAPI.Ingame.Utilities;
 using VRage.Game.ObjectBuilders.Definitions;
 using VRageMath;
+using VRageRender;
 using static IngameScript.Program;
 
 namespace IngameScript
@@ -44,25 +45,25 @@ namespace IngameScript
 
         // Global Setting Variables
 
-        static string _prefix;
-        static string _postfix;
+        private static string _prefix;
+        private static string _postfix;
 
-        static bool _leadingZeros;
+        private static bool _leadingZeros;
 
-        static bool _softSkip;
+        private static bool _softSkip;
 
-        static string _gridName;
-        static bool _workOnSubgrids;
+        private static string _gridName;
+        private static bool _workOnSubgrids;
 
-        string customData;
+        private string customData;
 
         // Used to go over every group
-        readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
+        private readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
 
         /// <summary>
         /// Stores all given block group data, processes the given command and handles renaming
         /// </summary>
-        public class BlockGroup
+        private class BlockGroup
         {
             public string GroupName { get; set; } = string.Empty;  // Used in the custom data and to find the right group
             public string Command { get; set; } = string.Empty;
@@ -183,7 +184,7 @@ namespace IngameScript
         /// Creates the blockGroups. Adds block to existing groups, or create new ones, if no group is found
         /// </summary>
         /// <returns>[int] 0 if no group was added, 1 if at least one was added</returns>
-        public int CreateBlockGroups()
+        private int CreateBlockGroups()
         {
             // The value that is returned. 0: no groups added, 1: group was added
             int returnValue = 0;
@@ -227,7 +228,7 @@ namespace IngameScript
         /// <summary>
         /// Generates the custom data based on the current blockGroups
         /// </summary>
-        public void AddBlockGroupsToCd()
+        private void AddBlockGroupsToCd()
         {
             // For just adding the block groups to the current custom data
             string addition = "\n";
@@ -245,7 +246,7 @@ namespace IngameScript
         /// <summary>
         /// Loads the given block group settings and removes them from the custom data.
         /// </summary>
-        public void LoadBlockGroups()
+        private void LoadBlockGroups()
         {
             string[] cdLines = customData.Split('\n');
 
@@ -276,7 +277,7 @@ namespace IngameScript
         /// <summary>
         /// Creates new custom data. TODO find a smarter way to do this. I am open for suggestions.
         /// </summary>
-        public void CreateCustomData()
+        private void CreateCustomData()
         {
             string[] cdText = {
                 "; Nebork's Renaming Script",
@@ -290,7 +291,7 @@ namespace IngameScript
                 "; https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script",
                 "",
                 "; If you run the script with an argument, the script will interpret",
-                "; it as the GridName. Adding a second argument (separated by a \",\"),",
+                "; it as the GridName. Adding a second argument (separated by a \",\")",
                 "; will define it's prefix.",
                 "",
                 "; ============================",
@@ -345,7 +346,7 @@ namespace IngameScript
         /// <summary>
         /// Reads the ini and sets all the settings. Requires the block groups to be created.
         /// </summary>
-        public void ReadIni()
+        private void ReadIni()
         {
             MyIni _ini = new MyIni();
 
@@ -377,7 +378,7 @@ namespace IngameScript
         /// Runs at the start of the game or every time it is recompiled (edit code or press recompile).
         /// Generates CD if needed.
         /// </summary>
-        public Program()
+        private Program()
         {
             // Basic Settings
             Runtime.UpdateFrequency = UpdateFrequency.None;
@@ -399,6 +400,17 @@ namespace IngameScript
             AddBlockGroupsToCd();
 
             Me.CustomData = customData;
+
+            // Changes the programmable block's interface
+            Me.CustomName = "Nebork's Renaming";
+            IMyTextSurface largeDisplay = Me.GetSurface(0);
+            largeDisplay.ContentType = ContentType.TEXT_AND_IMAGE;
+            largeDisplay.WriteText("Nebork's Renaming");
+            // largeDisplay.Font = "DEBUG";
+            largeDisplay.FontSize = 2;
+            largeDisplay.Alignment = TextAlignment.CENTER;
+            largeDisplay.TextPadding = 40;
+
         }
 
 
