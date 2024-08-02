@@ -32,8 +32,9 @@ namespace IngameScript
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
         The current version is only tested on vanilla blocks!
-        All changes and settings are made in this block's custom data.
-        There you can find further information.
+        All settings are made in this block's custom data.
+        There you can find further information on this script.
+
         If you want to know even more, visit the git:
         https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script
         */
