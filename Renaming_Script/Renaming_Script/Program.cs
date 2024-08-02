@@ -393,7 +393,11 @@ namespace IngameScript
                 CreateCustomData();
                 Echo("First Time Setup!\nPlease check the custom data of this block and set all settings.");
             }
-            else { LoadBlockGroups(); }
+            else
+            {
+                LoadBlockGroups();
+                Echo("Custom Data Found!\nPlease check the custom data and run the script.");
+            }
 
             // Find all block groups and add any new to the list
             CreateBlockGroups();
