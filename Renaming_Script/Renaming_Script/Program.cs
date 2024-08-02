@@ -53,6 +53,8 @@ namespace IngameScript
         static string _gridName;
         static bool _workOnSubgrids;
 
+        string customData;
+
         // Used to go over every group
         readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
 
@@ -216,14 +218,13 @@ namespace IngameScript
 
             addition += "\n";
 
-            Me.CustomData += addition;
+            customData += addition;
         }
 
         // Loads the given block group settings and removes them from the custom data.
         public void LoadBlockGroups()
         {
-            string cd = Me.CustomData;
-            string[] cdLines = cd.Split('\n');
+            string[] cdLines = customData.Split('\n');
 
             bool reachedBlockSettings = false;
             bool changed = false;
@@ -239,7 +240,7 @@ namespace IngameScript
                     if (changed == false)
                     {
                         changed = true;
-                        Me.CustomData = string.Join("\n", cdLines.Take(i - 1));  // Only the first i-1 elements, so without settings
+                        customData = string.Join("\n", cdLines.Take(i - 1));  // Only the first i-1 elements, so without settings
                     }
                     string[] words = cdLines[i].Replace(" ", "").Split(new char[] { '=' });
                     new BlockGroup(words[0]) { Command = words[1] };
@@ -311,7 +312,7 @@ namespace IngameScript
                 "; All refineries are shown in the inventory and numbered.",
                 "; They are called \"Smelter 1\", \"Smelter 2\", ..."
             };
-            Me.CustomData = string.Join("\n", cdText);
+            customData = string.Join("\n", cdText);
         }
 
 
@@ -320,14 +321,17 @@ namespace IngameScript
         public Program()
         {
             Runtime.UpdateFrequency = UpdateFrequency.None;
+            customData = Me.CustomData;
 
             // Clears list of any old, unused members
             blockGroups.Clear();
 
-            if (Me.CustomData == "") { CreateCustomData(); }
+            if (customData == "") { CreateCustomData(); }
             LoadBlockGroups();
             CreateBlockGroups(true);
             AddBlockGroupsToCd();
+
+            Me.CustomData = customData;
         }
 
 
@@ -335,11 +339,12 @@ namespace IngameScript
         // Processes the command string and uses it to rename all the blocks of a group
         public void Main(string argument/*, UpdateType updateSource*/)
         {
+            customData = Me.CustomData;
             MyIni _ini = new MyIni();
 
             // Try to parse the ini
             MyIniParseResult result;
-            if (!_ini.TryParse(Me.CustomData, out result))
+            if (!_ini.TryParse(customData, out result))
             {
                 Echo("Could not parse the Custom Data, syntax error!");
                 throw new Exception(result.ToString());
@@ -386,6 +391,7 @@ namespace IngameScript
                     break;
                 }
             }
+            Me.CustomData = customData;
         }
 
         // COPY UNTIL HERE
