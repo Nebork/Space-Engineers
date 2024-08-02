@@ -34,7 +34,7 @@ namespace IngameScript
         The current version is only tested on vanilla blocks!
         All settings are made in this block's custom data.
         There you can find further information on this script.
-        
+
         If you want to know even more, visit the git:
         https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script
         */
