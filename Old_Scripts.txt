@@ -1,3 +1,9 @@
+My first and oldest scripts, please don't judge me xD
+Very basic, inefficient and out of order, but cute and kinda OK intro to working with scripts.
+See Spaces Wiki for everything on scripts
+Huge Thanks to malware!
+
+
 Solar Script:
 
 void Main(string argument) {

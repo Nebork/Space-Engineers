@@ -1,3 +1,6 @@
+Some funny text to show on small LCD panels.
+Text in german and of no importance.
+
 Vorschläge.
 22 Zeichen, Font 4.5, Text Padding 25%
 Font Monospace, alignment Center
