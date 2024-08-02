@@ -58,7 +58,9 @@ namespace IngameScript
         // Used to go over every group
         readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
 
-        // Stores all given data and handles renaming
+        /// <summary>
+        /// Stores all given block group data, processes the given command and handles renaming
+        /// </summary>
         public class BlockGroup
         {
             public string GroupName { get; set; } = string.Empty;  // Used in the custom data and to find the right group
@@ -87,8 +89,13 @@ namespace IngameScript
             }
 
 
-            // Main function. Renames every block in the group with the given settings.
-            public int Rename()
+            /// <summary>
+            /// Main function. Renames every block in the group with the given command.
+            /// </summary>
+            /// <param name="workOnSubgrids">[bool] if true renames works on every block, no matter the gridName.</param>
+            /// <param name="gridName">[string] only renames blocks, which belong on the grid with this name.</param>
+            /// <returns>0 if successful, -1 if Process() failed</returns>
+            public int Rename(bool workOnSubgrids, string gridName)
             {
                 bool skipped = this.Command.Contains("-S");
 
@@ -97,46 +104,52 @@ namespace IngameScript
 
                 for (int i = 0; i < groupMembers.Count; i++)
                 {
-                    // Renaming
+                    IMyTerminalBlock renameBlock = groupMembers[i];
                     string futureName = "";
-
-                    if (!skipped)
+                    
+                    if (workOnSubgrids || renameBlock.CubeGrid.CustomName == gridName)  // If we want to work with this block at all
                     {
-                        // creating futureName
-                        if (_prefix != "") { futureName += $"{_prefix} "; }
-
-                        if (_rename) { futureName += $"{_replacementName}"; }
-                        else { futureName += $"{groupMembers[i].DefinitionDisplayNameText}"; }
-                        if (_numbering)
+                        if (!skipped)  // If this block is NOT skipped
                         {
-                            if (!_leadingZeros) { futureName += $" {i + 1}"; }
-                            else
+                            // creating futureName
+                            if (_prefix != "") { futureName += $"{_prefix} "; }
+
+                            if (_rename) { futureName += $"{_replacementName}"; }
+                            else { futureName += $"{renameBlock.DefinitionDisplayNameText}"; }
+                            if (_numbering)
                             {
-                                int numberOfZeros = (int)Math.Log10(groupMembers.Count) - (int)Math.Log10(i + 1);
-                                futureName += $" {String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
+                                if (!_leadingZeros) { futureName += $" {i + 1}"; }
+                                else
+                                {
+                                    int numberOfZeros = (int)Math.Log10(groupMembers.Count) - (int)Math.Log10(i + 1);
+                                    futureName += $" {String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
+                                }
                             }
+                            if (_postfix != "") { futureName += $" {_postfix}"; }
                         }
-                        if (_postfix != "") { futureName += $" {_postfix}"; }
-                    }
-                    else
-                    {
-                        futureName = groupMembers[i].CustomName;
-                        if (!futureName.StartsWith(_prefix) && _prefix != "") { futureName = $"{_prefix} {futureName}"; }
-                        if (!futureName.EndsWith(_postfix) && _postfix != "") { futureName = $"{futureName} {_postfix}"; }
-                    }
-                    groupMembers[i].CustomName = futureName;
+                        else  // If this block is skipped, but it's a soft skip
+                        {
+                            futureName = renameBlock.CustomName;
+                            if (!futureName.StartsWith(_prefix) && _prefix != "") { futureName = $"{_prefix} {futureName}"; }
+                            if (!futureName.EndsWith(_postfix) && _postfix != "") { futureName = $"{futureName} {_postfix}"; }
+                        }
+                        renameBlock.CustomName = futureName;
 
 
-                    // Settings
-                    groupMembers[i].ShowInInventory = this._showInInventory;
-                    groupMembers[i].ShowOnHUD = this._showOnHud;
-                    groupMembers[i].ShowInTerminal = this._showInTerminal;
-                    groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
+                        // Settings
+                        groupMembers[i].ShowInInventory = this._showInInventory;
+                        groupMembers[i].ShowOnHUD = this._showOnHud;
+                        groupMembers[i].ShowInTerminal = this._showInTerminal;
+                        groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
+                    }
                 }
                 return 0;
             }
 
-
+            /// <summary>
+            /// Processes the Command string. TODO not good with whitespaces.
+            /// </summary>
+            /// <returns>0 if successful, -1 else</returns>
             private int Process()
             {
                 this.Command = this.Command.Replace(" ", "");
@@ -165,9 +178,15 @@ namespace IngameScript
             }
         }
 
-        // Creates the blockGroups of the current state  TODO is dependent on workOnSubgrids. Just add parameter and filter allBlocks dependently
-        public void CreateBlockGroups(bool forceAllBlocks)
+        /// <summary>
+        /// Creates the blockGroups. Adds block to existing groups, or create new ones, if no group is found
+        /// </summary>
+        /// <returns>[int] 0 if no group was added, 1 if at least one was added</returns>
+        public int CreateBlockGroups()
         {
+            // The value that is returned. 0: no groups added, 1: group was added
+            int returnValue = 0;
+
             // Get all blocks and prepare for assignment to groups.
             List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocks(allBlocks);
@@ -175,36 +194,38 @@ namespace IngameScript
             // Loop to assign every block to a group or create a new one.
             foreach (IMyTerminalBlock terminalBlock in allBlocks)
             {
-                if (forceAllBlocks || _workOnSubgrids || terminalBlock.CubeGrid.CustomName == _gridName)
+                string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
+
+                int index = -1;
+
+                for (int i = 0; i < blockGroups.Count; i++)
                 {
-                    string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
-
-                    int index = -1;
-
-                    for (int i = 0; i < blockGroups.Count; i++)
+                    if (easyBlockType == blockGroups[i].GroupName)
                     {
-                        if (easyBlockType == blockGroups[i].GroupName)
-                        {
-                            index = i; break;
-                        }
-                    }
-
-                    if (index == -1)  // No group with this name found
-                    {
-                        new BlockGroup(easyBlockType);
-                        blockGroups.Last().groupMembers.Add(terminalBlock);
-                    }
-                    else  // There already is a group with this name, just add the block
-                    {
-                        blockGroups[index].groupMembers.Add(terminalBlock);
+                        index = i; break;
                     }
                 }
+
+                if (index == -1)  // No group with this name found
+                {
+                    new BlockGroup(easyBlockType);
+                    blockGroups.Last().groupMembers.Add(terminalBlock);
+                    returnValue = 1;
+                }
+                else  // There already is a group with this name, just add the block
+                {
+                    blockGroups[index].groupMembers.Add(terminalBlock);
+                }
             }
+
             blockGroups.Sort((x, y) => x.GroupName.CompareTo(y.GroupName));  // Sort the list
+            return returnValue;
         }
 
 
-        // Generates the Custom Data based on the current blockGroups
+        /// <summary>
+        /// Generates the custom data based on the current blockGroups
+        /// </summary>
         public void AddBlockGroupsToCd()
         {
             // For just adding the block groups to the current custom data
@@ -220,13 +241,15 @@ namespace IngameScript
             customData += addition;
         }
 
-        // Loads the given block group settings and removes them from the custom data.
+        /// <summary>
+        /// Loads the given block group settings and removes them from the custom data.
+        /// </summary>
         public void LoadBlockGroups()
         {
             string[] cdLines = customData.Split('\n');
 
             bool reachedBlockSettings = false;
-            bool changed = false;
+            bool reachedFirstSetting = false;
 
             for (int i = 0; i < cdLines.Length; i++)
             {
@@ -236,9 +259,10 @@ namespace IngameScript
                 }
                 else if (reachedBlockSettings && !cdLines[i].StartsWith(";") && cdLines[i] != "")
                 {
-                    if (changed == false)
+                    if (reachedFirstSetting == false)
                     {
-                        changed = true;
+                        // everything BEFORE the first setting is saved and put into the new custom data
+                        reachedFirstSetting = true;
                         customData = string.Join("\n", cdLines.Take(i - 1));  // Only the first i-1 elements, so without settings
                     }
                     string[] words = cdLines[i].Replace(" ", "").Split(new char[] { '=' });
@@ -248,7 +272,9 @@ namespace IngameScript
         }
 
 
-        // Creates new custom data. TODO find a smarter way to do this. I am open for suggestions
+        /// <summary>
+        /// Creates new custom data. TODO find a smarter way to do this. I am open for suggestions.
+        /// </summary>
         public void CreateCustomData()
         {
             string[] cdText = {
@@ -315,30 +341,11 @@ namespace IngameScript
         }
 
 
-        // Runs at the start of the game or every time it is recompiled (edit code or press recompile)
-        // Shall check and generate the custom data
-        public Program()
+        /// <summary>
+        /// Reads the ini and sets all the settings. Requires the block groups to be created.
+        /// </summary>
+        public void ReadIni()
         {
-            Runtime.UpdateFrequency = UpdateFrequency.None;
-            customData = Me.CustomData;
-
-            // Clears list of any old, unused members
-            blockGroups.Clear();
-
-            if (customData == "") { CreateCustomData(); }
-            LoadBlockGroups();
-            CreateBlockGroups(true);
-            AddBlockGroupsToCd();
-
-            Me.CustomData = customData;
-        }
-
-
-        // Runs every time someone presses run. Shall fetch all the blocks and put them into the groups
-        // Processes the command string and uses it to rename all the blocks of a group
-        public void Main(string argument/*, UpdateType updateSource*/)
-        {
-            customData = Me.CustomData;
             MyIni _ini = new MyIni();
 
             // Try to parse the ini
@@ -354,10 +361,66 @@ namespace IngameScript
             _postfix = _ini.Get("Global Settings", "Postfix").ToString();
 
             _leadingZeros = _ini.Get("Global Settings", "LeadingZeros").ToBoolean();
-
             _softSkip = _ini.Get("Global Settings", "SoftSkip").ToBoolean();
+            _gridName = _ini.Get("Global Settings", "GridName").ToString();
+            _workOnSubgrids = _ini.Get("Global Settings", "WorkOnSubgrids").ToBoolean();
 
-            // If an argument is given, read it!
+            // Loads the input for every block group
+            foreach (BlockGroup blockGroup in blockGroups)
+            {
+                blockGroup.Command = _ini.Get("Block Settings", blockGroup.GroupName).ToString();
+            }
+        }
+
+        /// <summary>
+        /// Runs at the start of the game or every time it is recompiled (edit code or press recompile).
+        /// Generates CD if needed.
+        /// </summary>
+        public Program()
+        {
+            // Basic Settings
+            Runtime.UpdateFrequency = UpdateFrequency.None;
+            customData = Me.CustomData;
+
+            // Clears list of any old, unused members
+            blockGroups.Clear();
+
+            // Creates the custom data or loads it's settings
+            if (customData == "")
+            {
+                CreateCustomData();
+                Echo("First Time Setup!\nPlease check the custom data of this block and set all settings.");
+            }
+            else { LoadBlockGroups(); }
+
+            // Find all block groups and add any new to the list
+            CreateBlockGroups();
+            AddBlockGroupsToCd();
+
+            Me.CustomData = customData;
+        }
+
+
+        /// <summary>
+        /// Runs every time someone presses run. Loads all blockGroups and adds new ones if needed. 
+        /// If none were added, renames and sets every block according to the CD, else give a hint.
+        /// </summary>
+        /// <param name="argument">The input if the script is run with an argument</param>
+        public void Main(string argument/*, UpdateType updateSource*/)
+        {
+            customData = Me.CustomData;
+            bool addedNewBlockgroups = false;
+
+            // Clears list of any old, unused members
+            blockGroups.Clear();
+
+            LoadBlockGroups();
+            if (CreateBlockGroups() == 1) { addedNewBlockgroups = true; }
+            AddBlockGroupsToCd();
+
+            ReadIni();
+
+            // Argument handling
             if (argument != "")
             {
                 string[] names = argument.Split(',');
@@ -366,30 +429,27 @@ namespace IngameScript
             }
             else  // If no argument is given
             {
-                _gridName = _ini.Get("Global Settings", "GridName").ToString();
                 if (_gridName == "") { _gridName = Me.CubeGrid.CustomName; }
             }
-            _workOnSubgrids = _ini.Get("Global Settings", "WorkOnSubgrids").ToBoolean();
 
-            // Clears list of any old, unused members
-            blockGroups.Clear();
-            CreateBlockGroups(false);
-
-            // Loads the input for every block group
-            foreach (BlockGroup blockGroup in blockGroups)
+            // Main renaming loop. Iterates every block group and renames it according to their settings.
+            if (addedNewBlockgroups)
             {
-                blockGroup.Command = _ini.Get("Block Settings", blockGroup.GroupName).ToString();
+                Echo("New block groups were added.\nPlease set the settings and run again.");
             }
-
-            // Main loop, iterates every block group and renames it according to their settings.
-            foreach (BlockGroup blockGroup in blockGroups)
+            else
             {
-                if (blockGroup.Rename() == -1)
+                foreach (BlockGroup blockGroup in blockGroups)
                 {
-                    Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
-                    break;
+                    if (blockGroup.Rename(_workOnSubgrids, _gridName) == -1)
+                    {
+                        Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
+                        break;
+                    }
                 }
+                Echo("Renaming successful!");
             }
+
             Me.CustomData = customData;
         }
 
