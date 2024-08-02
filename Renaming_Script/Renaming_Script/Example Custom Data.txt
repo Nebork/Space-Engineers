@@ -1,6 +1,3 @@
-; WORK IN PROGRESS (August 1st 2024)
-; THERE ARE NO SETTINGS YET!
-
 ; Nebork's Renaming Script
 
 ; This script gives every functional block on this grid a uniform naming.
@@ -12,7 +9,7 @@
 ; https://github.com/Nebork/Space-Engineers/tree/main/Renaming_Script/Renaming_Script
 
 ; If you run the script with an argument, the script will interpret
-; it as the GridName. Adding a second argument (separated by a ","),
+; it as the GridName. Adding a second argument (separated by a ",")
 ; will define it's prefix.
 
 ; ============================
@@ -59,3 +56,17 @@ SoftSkip = true
 ; Example: Refinery = -I -N -R "Smelter"
 ; All refineries are shown in the inventory and numbered.
 ; They are called "Smelter 1", "Smelter 2", ...
+
+Assembler = -I -N -R "Assembler"
+CameraBlock = -S
+Cockpit = -B -I -T
+GravityGenerator = -B -T
+Gyro = -B -N -T
+InteriorLight = -N -R "Light"
+JumpDrive = -B -T
+ProgrammableBlock = -S
+RadioAntenna = -B -R "Antenna" -T
+Reactor = -B -I -N -R "Reactor" -T
+Refinery = -I -N -R "Refinery"
+ShipConnector = -B -I -N -T
+Thrust = -N -R "Thruster"
