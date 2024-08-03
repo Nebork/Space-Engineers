@@ -62,7 +62,7 @@ namespace IngameScript
         private readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
 
         /// <summary>
-        /// Stores all given block group data, processes the given command and handles renaming
+        /// Stores all given block group data, processes the given command and handles renaming.
         /// </summary>
         private class BlockGroup
         {
@@ -88,7 +88,7 @@ namespace IngameScript
                 this.GroupName = groupname;
                 blockGroups.Add(this);
 
-                groupMembers = new List<IMyTerminalBlock>() { };  // Initialises the list and puts in first block.
+                groupMembers = new List<IMyTerminalBlock>() { };  // Initialises the list and puts in first block
             }
 
 
@@ -129,21 +129,20 @@ namespace IngameScript
                                 }
                             }
                             if (_postfix != "") { futureName += $" {_postfix}"; }
+
+                            // Settings
+                            groupMembers[i].ShowInInventory = this._showInInventory;
+                            groupMembers[i].ShowOnHUD = this._showOnHud;
+                            groupMembers[i].ShowInTerminal = this._showInTerminal;
+                            groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
                         }
-                        else  // If this block is skipped, but it's a soft skip
+                        else  // If this block is skipped, but it's a soft skip. Only adds pre- and postfix
                         {
                             futureName = renameBlock.CustomName;
                             if (!futureName.StartsWith(_prefix) && _prefix != "") { futureName = $"{_prefix} {futureName}"; }
                             if (!futureName.EndsWith(_postfix) && _postfix != "") { futureName = $"{futureName} {_postfix}"; }
                         }
                         renameBlock.CustomName = futureName;
-
-
-                        // Settings
-                        groupMembers[i].ShowInInventory = this._showInInventory;
-                        groupMembers[i].ShowOnHUD = this._showOnHud;
-                        groupMembers[i].ShowInTerminal = this._showInTerminal;
-                        groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
                     }
                 }
                 return 0;
@@ -182,9 +181,9 @@ namespace IngameScript
         }
 
         /// <summary>
-        /// Creates the blockGroups. Adds block to existing groups, or create new ones, if no group is found
+        /// Creates the blockGroups. Adds block to existing groups, or create new ones, if no group is found.
         /// </summary>
-        /// <returns>[int] 0 if no group was added, 1 if at least one was added</returns>
+        /// <returns>[int] 0 if no group was added, 1 if at least one was added.</returns>
         private int CreateBlockGroups()
         {
             // The value that is returned. 0: no groups added, 1: group was added
@@ -227,7 +226,7 @@ namespace IngameScript
 
 
         /// <summary>
-        /// Generates the custom data based on the current blockGroups
+        /// Generates the custom data based on the current blockGroups.
         /// </summary>
         private void AddBlockGroupsToCd()
         {
@@ -415,7 +414,6 @@ namespace IngameScript
             largeDisplay.FontSize = 2;
             largeDisplay.Alignment = TextAlignment.CENTER;
             largeDisplay.TextPadding = 40;
-
         }
 
 
