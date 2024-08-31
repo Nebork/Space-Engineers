@@ -27,7 +27,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Renaming Script
+        Nebork's Renaming Script v.1.0.0
 
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
@@ -47,7 +47,7 @@ namespace IngameScript
         // Global Setting Variables
 
         private static string _prefix;
-        private static string _postfix;
+        private static string _suffix;
 
         private static bool _leadingZeros;
 
@@ -128,7 +128,7 @@ namespace IngameScript
                                     futureName += $" {String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
                                 }
                             }
-                            if (_postfix != "") { futureName += $" {_postfix}"; }
+                            if (_suffix != "") { futureName += $" {_suffix}"; }
 
                             // Settings
                             groupMembers[i].ShowInInventory = this._showInInventory;
@@ -136,11 +136,11 @@ namespace IngameScript
                             groupMembers[i].ShowInTerminal = this._showInTerminal;
                             groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
                         }
-                        else  // If this block is skipped, but it's a soft skip. Only adds pre- and postfix
+                        else  // If this block is skipped, but it's a soft skip. Only adds pre- and suffix
                         {
                             futureName = renameBlock.CustomName;
                             if (!futureName.StartsWith(_prefix) && _prefix != "") { futureName = $"{_prefix} {futureName}"; }
-                            if (!futureName.EndsWith(_postfix) && _postfix != "") { futureName = $"{futureName} {_postfix}"; }
+                            if (!futureName.EndsWith(_suffix) && _suffix != "") { futureName = $"{futureName} {_suffix}"; }
                         }
                         renameBlock.CustomName = futureName;
                     }
@@ -306,17 +306,17 @@ namespace IngameScript
                 "; USE WITH CAUTION!",
                 "WorkOnSubgrids = false",
                 "",
-                "; Sets a prefix and postfix(suffix) for every block.",
+                "; Sets a prefix and suffix for every block.",
                 "; Leave empty if nothing is wanted.",
                 "; I prefer unique prefixes for every grid.",
                 "Prefix = [SHP]",
-                "Postfix = ",
+                "Suffix = ",
                 "",
                 "; If true, adds leading zeros to numberings of blocks if needed.",
                 "; This leads to better sorting in the terminal. [true/false]",
                 "LeadingZeros = true",
                 "",
-                "; If true, adds only prefix and postfix(suffix) to skipped groups.",
+                "; If true, adds only prefix and suffix to skipped groups.",
                 "; [true/false]",
                 "SoftSkip = true",
                 "",
@@ -360,7 +360,7 @@ namespace IngameScript
 
             // Read all global settings
             _prefix = _ini.Get("Global Settings", "Prefix").ToString();
-            _postfix = _ini.Get("Global Settings", "Postfix").ToString();
+            _suffix = _ini.Get("Global Settings", "Suffix").ToString();
 
             _leadingZeros = _ini.Get("Global Settings", "LeadingZeros").ToBoolean();
             _softSkip = _ini.Get("Global Settings", "SoftSkip").ToBoolean();
