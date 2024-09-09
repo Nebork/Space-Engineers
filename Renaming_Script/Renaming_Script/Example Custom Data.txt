@@ -1,4 +1,4 @@
-; Nebork's Renaming Script, v.1.0.2
+; Nebork's Renaming Script, v.1.0.3
 
 ; This script gives every functional block on this grid a uniform naming.
 ; You can also set a lot of the properties at once.

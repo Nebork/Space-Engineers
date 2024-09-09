@@ -27,7 +27,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Renaming Script v.1.0.2
+        Nebork's Renaming Script v.1.0.3
 
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
@@ -98,7 +98,7 @@ namespace IngameScript
             /// <param name="workOnSubgrids">[bool] if true renames works on every block, no matter the gridName.</param>
             /// <param name="gridName">[string] only renames blocks, which belong on the grid with this name.</param>
             /// <returns>0 if successful, -1 if Process() failed</returns>
-            public int Rename(bool workOnSubgrids, string gridName)
+            public int Rename()
             {
                 bool skipped = this.Command.Contains("-S");
 
@@ -109,41 +109,38 @@ namespace IngameScript
                 {
                     IMyTerminalBlock renameBlock = groupMembers[i];
                     string futureName = "";
-                    
-                    if (workOnSubgrids || renameBlock.CubeGrid.CustomName == gridName)  // If we want to work with this block at all
+
+                    if (!skipped)  // If this block is NOT skipped
                     {
-                        if (!skipped)  // If this block is NOT skipped
-                        {
-                            // creating futureName
-                            if (_prefix != "") { futureName += $"{_prefix} "; }
+                        // creating futureName
+                        if (_prefix != "") { futureName += $"{_prefix} "; }
 
-                            if (_rename) { futureName += $"{_replacementName}"; }
-                            else { futureName += $"{renameBlock.DefinitionDisplayNameText}"; }
-                            if (_numbering)
+                        if (_rename) { futureName += $"{_replacementName}"; }
+                        else { futureName += $"{renameBlock.DefinitionDisplayNameText}"; }
+                        if (_numbering)
+                        {
+                            if (!_leadingZeros) { futureName += $" {i + 1}"; }
+                            else
                             {
-                                if (!_leadingZeros) { futureName += $" {i + 1}"; }
-                                else
-                                {
-                                    int numberOfZeros = (int)Math.Log10(groupMembers.Count) - (int)Math.Log10(i + 1);
-                                    futureName += $" {String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
-                                }
+                                int numberOfZeros = (int)Math.Log10(groupMembers.Count) - (int)Math.Log10(i + 1);
+                                futureName += $" {String.Concat(Enumerable.Repeat("0", numberOfZeros))}{i + 1}";
                             }
-                            if (_suffix != "") { futureName += $" {_suffix}"; }
+                        }
+                        if (_suffix != "") { futureName += $" {_suffix}"; }
 
-                            // Settings
-                            groupMembers[i].ShowInInventory = this._showInInventory;
-                            groupMembers[i].ShowOnHUD = this._showOnHud;
-                            groupMembers[i].ShowInTerminal = this._showInTerminal;
-                            groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
-                        }
-                        else  // If this block is skipped, but it's a soft skip. Only adds pre- and suffix
-                        {
-                            futureName = renameBlock.CustomName;
-                            if (!futureName.StartsWith(_prefix) && _prefix != "") { futureName = $"{_prefix} {futureName}"; }
-                            if (!futureName.EndsWith(_suffix) && _suffix != "") { futureName = $"{futureName} {_suffix}"; }
-                        }
-                        renameBlock.CustomName = futureName;
+                        // Settings
+                        groupMembers[i].ShowInInventory = this._showInInventory;
+                        groupMembers[i].ShowOnHUD = this._showOnHud;
+                        groupMembers[i].ShowInTerminal = this._showInTerminal;
+                        groupMembers[i].ShowInToolbarConfig = this._showInToolbarConfig;
                     }
+                    else  // If this block is skipped, but it's a soft skip. Only adds pre- and suffix
+                    {
+                        futureName = renameBlock.CustomName;
+                        if (!futureName.StartsWith(_prefix) && _prefix != "") { futureName = $"{_prefix} {futureName}"; }
+                        if (!futureName.EndsWith(_suffix) && _suffix != "") { futureName = $"{futureName} {_suffix}"; }
+                    }
+                    renameBlock.CustomName = futureName;
                 }
                 return 0;
             }
@@ -196,6 +193,12 @@ namespace IngameScript
             // Loop to assign every block to a group or create a new one.
             foreach (IMyTerminalBlock terminalBlock in allBlocks)
             {
+                // Removes all blocks, which are not on the to work on grid.
+                if (!_workOnSubgrids && terminalBlock.CubeGrid.CustomName != _gridName)
+                {
+                    continue;
+                }
+
                 string easyBlockType = terminalBlock.GetType().ToString().Split('.').Last().Replace("My", "");  // Regex looks easier
 
                 int index = -1;
@@ -280,7 +283,7 @@ namespace IngameScript
         private void CreateCustomData()
         {
             string[] cdText = {
-                "; Nebork's Renaming Script, v.1.0.2",
+                "; Nebork's Renaming Script, v.1.0.3",
                 "",
                 "; This script gives every functional block on this grid a uniform naming.",
                 "; You can also set a lot of the properties at once.",
@@ -429,14 +432,7 @@ namespace IngameScript
             bool addedNewBlockgroups = false;
 
             ReadIni();
-
-            // Clears list of any old, unused members
-            blockGroups.Clear();
-
-            LoadBlockGroups();
-            if (CreateBlockGroups() == 1) { addedNewBlockgroups = true; }
-            AddBlockGroupsToCd();
-
+            
             // Argument handling
             if (argument != "")
             {
@@ -446,8 +442,15 @@ namespace IngameScript
             }
             else  // If no argument is given
             {
-                if (_gridName == "") { _gridName = Me.CubeGrid.CustomName; }
+                if (_gridName.Replace(" ", "") == "") { _gridName = Me.CubeGrid.CustomName; }
             }
+
+            // Clears list of any old, unused members
+            blockGroups.Clear();
+
+            LoadBlockGroups();
+            if (CreateBlockGroups() == 1) { addedNewBlockgroups = true; }
+            AddBlockGroupsToCd();
 
             if (addedNewBlockgroups)
             {
@@ -459,7 +462,7 @@ namespace IngameScript
             Echo("Starting Renaming...");
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                if (blockGroup.Rename(_workOnSubgrids, _gridName) == -1)
+                if (blockGroup.Rename() == -1)
                 {
                     Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
                     break;
