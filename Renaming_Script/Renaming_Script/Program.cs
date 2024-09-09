@@ -188,7 +188,7 @@ namespace IngameScript
         {
             // The value that is returned. 0: no groups added, 1: group was added
             int returnValue = 0;
-
+            
             // Get all blocks and prepare for assignment to groups.
             List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocks(allBlocks);
@@ -371,7 +371,7 @@ namespace IngameScript
             // Loads the input for every block group
             foreach (BlockGroup blockGroup in blockGroups)
             {
-                blockGroup.Command = _ini.Get("Block Settings", blockGroup.GroupName).ToString();
+                blockGroup.Command = _ini.Get("Group Settings", blockGroup.GroupName).ToString();
             }
         }
 
@@ -428,14 +428,14 @@ namespace IngameScript
             customData = Me.CustomData;
             bool addedNewBlockgroups = false;
 
+            ReadIni();
+
             // Clears list of any old, unused members
             blockGroups.Clear();
 
             LoadBlockGroups();
             if (CreateBlockGroups() == 1) { addedNewBlockgroups = true; }
             AddBlockGroupsToCd();
-
-            ReadIni();
 
             // Argument handling
             if (argument != "")
@@ -449,24 +449,23 @@ namespace IngameScript
                 if (_gridName == "") { _gridName = Me.CubeGrid.CustomName; }
             }
 
-            // Main renaming loop. Iterates every block group and renames it according to their settings.
             if (addedNewBlockgroups)
             {
                 Echo("New block groups were added.\nPlease check the settings and run again.");
+                return;
             }
-            else
+
+            // Main renaming loop. Iterates every block group and renames it according to their settings.
+            Echo("Starting Renaming...");
+            foreach (BlockGroup blockGroup in blockGroups)
             {
-                Echo("Starting Renaming...");
-                foreach (BlockGroup blockGroup in blockGroups)
+                if (blockGroup.Rename(_workOnSubgrids, _gridName) == -1)
                 {
-                    if (blockGroup.Rename(_workOnSubgrids, _gridName) == -1)
-                    {
-                        Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
-                        break;
-                    }
+                    Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
+                    break;
                 }
-                Echo("Renaming successful!");
             }
+            Echo("Renaming successful!");
 
             Me.CustomData = customData;
         }
