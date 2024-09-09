@@ -27,7 +27,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Renaming Script v.1.0.1
+        Nebork's Renaming Script v.1.0.2
 
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
@@ -154,14 +154,14 @@ namespace IngameScript
             /// <returns>0 if successful, -1 else</returns>
             private int Process()
             {
-                this.Command = this.Command.Replace(" ", "");
+                string workingCommand = this.Command.Replace(" ", "");
                 // Checks if input is not valid, good luck with the Regex :D
-                if (this.Command != "" && !System.Text.RegularExpressions.Regex.IsMatch(this.Command, "(-[NTIHBS]|(-R\"[a-zA-Z0-9]+\"))+"))
+                if (workingCommand != "" && !System.Text.RegularExpressions.Regex.IsMatch(workingCommand, "(-[NTIHBS]|(-R\"[a-zA-Z0-9]+\"))+"))
                 {
                     return -1;
                 }
 
-                string[] commands = this.Command.Split('-');
+                string[] commands = workingCommand.Split('-');
 
                 for (int i = 0; i < commands.Length; i++)
                 {
@@ -280,7 +280,7 @@ namespace IngameScript
         private void CreateCustomData()
         {
             string[] cdText = {
-                "; Nebork's Renaming Script, v.1.0.1",
+                "; Nebork's Renaming Script, v.1.0.2",
                 "",
                 "; This script gives every functional block on this grid a uniform naming.",
                 "; You can also set a lot of the properties at once.",
@@ -406,15 +406,15 @@ namespace IngameScript
 
             Me.CustomData = customData;
 
-            // Changes the programmable block's interface
-            // Me.CustomName = "Nebork's Renaming";
-            // IMyTextSurface largeDisplay = Me.GetSurface(0);
-            // largeDisplay.ContentType = ContentType.TEXT_AND_IMAGE;
-            // largeDisplay.WriteText("Nebork's Renaming");
-            // largeDisplay.Font = "DEBUG";
-            // largeDisplay.FontSize = 2;
-            // largeDisplay.Alignment = TextAlignment.CENTER;
-            // largeDisplay.TextPadding = 40;
+            /* Changes the programmable block's interface
+            Me.CustomName = "Nebork's Renaming";
+            IMyTextSurface largeDisplay = Me.GetSurface(0);
+            largeDisplay.ContentType = ContentType.TEXT_AND_IMAGE;
+            largeDisplay.WriteText("Nebork's Renaming");
+            largeDisplay.Font = "DEBUG";
+            largeDisplay.FontSize = 2;
+            largeDisplay.Alignment = TextAlignment.CENTER;
+            largeDisplay.TextPadding = 40; */
         }
 
 
@@ -452,7 +452,7 @@ namespace IngameScript
             // Main renaming loop. Iterates every block group and renames it according to their settings.
             if (addedNewBlockgroups)
             {
-                Echo("New block groups were added.\nPlease set the settings and run again.");
+                Echo("New block groups were added.\nPlease check the settings and run again.");
             }
             else
             {
