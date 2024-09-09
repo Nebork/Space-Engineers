@@ -255,7 +255,7 @@ namespace IngameScript
 
             for (int i = 0; i < cdLines.Length; i++)
             {
-                if (cdLines[i] == "[Block Settings]")
+                if (cdLines[i] == "[Group Settings]")
                 {
                     reachedBlockSettings = true;
                 }
@@ -459,7 +459,6 @@ namespace IngameScript
                 Echo("Starting Renaming...");
                 foreach (BlockGroup blockGroup in blockGroups)
                 {
-                    Echo($"Renaming group {blockGroup.GroupName}");
                     if (blockGroup.Rename(_workOnSubgrids, _gridName) == -1)
                     {
                         Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
