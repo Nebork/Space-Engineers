@@ -27,7 +27,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Renaming Script v.1.0.0
+        Nebork's Renaming Script v.1.0.1
 
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
@@ -280,7 +280,7 @@ namespace IngameScript
         private void CreateCustomData()
         {
             string[] cdText = {
-                "; Nebork's Renaming Script",
+                "; Nebork's Renaming Script, v.1.0.1",
                 "",
                 "; This script gives every functional block on this grid a uniform naming.",
                 "; You can also set a lot of the properties at once.",
@@ -298,30 +298,31 @@ namespace IngameScript
                 "[Global Settings]",
                 "; ============================",
                 "",
+                "GridName = ",
                 "; Defines the name of the grid which shall be renamed.",
                 "; If empty uses the grid of this programmable block.",
-                "GridName = ",
                 "",
+                "WorkOnSubgrids = false",
                 "; Decides if all subgrids shall be renamed uniformely. [true/false]",
                 "; USE WITH CAUTION!",
-                "WorkOnSubgrids = false",
                 "",
+                "Prefix = [SHP]",
+                "Suffix = ",
                 "; Sets a prefix and suffix for every block.",
                 "; Leave empty if nothing is wanted.",
                 "; I prefer unique prefixes for every grid.",
-                "Prefix = [SHP]",
-                "Suffix = ",
                 "",
+                "LeadingZeros = true",
                 "; If true, adds leading zeros to numberings of blocks if needed.",
                 "; This leads to better sorting in the terminal. [true/false]",
-                "LeadingZeros = true",
                 "",
-                "; If true, adds only prefix and suffix to skipped groups.",
-                "; [true/false]",
                 "SoftSkip = true",
+                "; Blocks in skipped groups (see Groups Settings) will not be renamed.",
+                "; If true, prefix and suffix however will be added to those blocks.",
+                "; [true/false]",
                 "",
                 "; ============================",
-                "[Block Settings]",
+                "[Group Settings]",
                 "; ============================",
                 "",
                 "; Write your wanted tags behind every block type the way you like it.",
@@ -406,14 +407,14 @@ namespace IngameScript
             Me.CustomData = customData;
 
             // Changes the programmable block's interface
-            Me.CustomName = "Nebork's Renaming";
-            IMyTextSurface largeDisplay = Me.GetSurface(0);
-            largeDisplay.ContentType = ContentType.TEXT_AND_IMAGE;
-            largeDisplay.WriteText("Nebork's Renaming");
+            // Me.CustomName = "Nebork's Renaming";
+            // IMyTextSurface largeDisplay = Me.GetSurface(0);
+            // largeDisplay.ContentType = ContentType.TEXT_AND_IMAGE;
+            // largeDisplay.WriteText("Nebork's Renaming");
             // largeDisplay.Font = "DEBUG";
-            largeDisplay.FontSize = 2;
-            largeDisplay.Alignment = TextAlignment.CENTER;
-            largeDisplay.TextPadding = 40;
+            // largeDisplay.FontSize = 2;
+            // largeDisplay.Alignment = TextAlignment.CENTER;
+            // largeDisplay.TextPadding = 40;
         }
 
 
@@ -455,8 +456,10 @@ namespace IngameScript
             }
             else
             {
+                Echo("Starting Renaming...");
                 foreach (BlockGroup blockGroup in blockGroups)
                 {
+                    Echo($"Renaming group {blockGroup.GroupName}");
                     if (blockGroup.Rename(_workOnSubgrids, _gridName) == -1)
                     {
                         Echo($"An error occured in group {blockGroup.GroupName} with its command {blockGroup.Command}!\n");
