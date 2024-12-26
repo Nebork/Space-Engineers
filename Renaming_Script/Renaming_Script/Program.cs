@@ -27,7 +27,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Renaming Script v.1.0.3
+        Nebork's Renaming Script v.1.0.4
 
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
@@ -283,7 +283,7 @@ namespace IngameScript
         private void CreateCustomData()
         {
             string[] cdText = {
-                "; Nebork's Renaming Script, v.1.0.3",
+                "; Nebork's Renaming Script, v.1.0.4",
                 "",
                 "; This script gives every functional block on this grid a uniform naming.",
                 "; You can also set a lot of the properties at once.",
@@ -454,6 +454,7 @@ namespace IngameScript
 
             if (addedNewBlockgroups)
             {
+                Me.CustomData = customData;
                 Echo("New block groups were added.\nPlease check the settings and run again.");
                 return;
             }
