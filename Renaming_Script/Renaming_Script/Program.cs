@@ -61,6 +61,8 @@ namespace IngameScript
         // Used to go over every group
         private readonly static List<BlockGroup> blockGroups = new List<BlockGroup>();
 
+        private const bool debug = false;
+
         /// <summary>
         /// Stores all given block group data, processes the given command and handles renaming.
         /// </summary>
@@ -183,12 +185,16 @@ namespace IngameScript
         /// <returns>[int] 0 if no group was added, 1 if at least one was added.</returns>
         private int CreateBlockGroups()
         {
+            if (debug) Echo("Debug: CreateBlockGroups()");
+
             // The value that is returned. 0: no groups added, 1: group was added
             int returnValue = 0;
-            
+
             // Get all blocks and prepare for assignment to groups.
             List<IMyTerminalBlock> allBlocks = new List<IMyTerminalBlock>();
             GridTerminalSystem.GetBlocks(allBlocks);
+
+            if (debug) Echo($"Debug: Found {allBlocks.Count} blocks.");
 
             // Loop to assign every block to a group or create a new one.
             foreach (IMyTerminalBlock terminalBlock in allBlocks)
@@ -196,6 +202,8 @@ namespace IngameScript
                 // Removes all blocks, which are not on the to work on grid.
                 if (!_workOnSubgrids && terminalBlock.CubeGrid.CustomName != _gridName)
                 {
+                    if (debug) Echo($"Debug: Ignored {terminalBlock.CustomName}, _workOnSubgrids = {_workOnSubgrids}");
+                    if (debug) Echo($"Debug: grids: {terminalBlock.CubeGrid.CustomName} | {_gridName}");
                     continue;
                 }
 
@@ -216,10 +224,12 @@ namespace IngameScript
                     new BlockGroup(easyBlockType);
                     blockGroups.Last().groupMembers.Add(terminalBlock);
                     returnValue = 1;
+                    if (debug) Echo($"Debug: Added group {blockGroups.Last().GroupName} by {terminalBlock.CustomName}.");
                 }
                 else  // There already is a group with this name, just add the block
                 {
                     blockGroups[index].groupMembers.Add(terminalBlock);
+                    if (debug) Echo($"Debug: Added {terminalBlock.CustomName} to group {blockGroups.Last().GroupName}.");
                 }
             }
 
@@ -233,6 +243,8 @@ namespace IngameScript
         /// </summary>
         private void AddBlockGroupsToCd()
         {
+            if (debug) Echo("Debug: AddBlockGroupsToCd()");
+
             // For just adding the block groups to the current custom data
             string addition = "\n";
 
@@ -251,6 +263,8 @@ namespace IngameScript
         /// </summary>
         private void LoadBlockGroups()
         {
+            if (debug) Echo("Debug: LoadBlockGroups()");
+
             string[] cdLines = customData.Split('\n');
 
             bool reachedBlockSettings = false;
@@ -384,6 +398,8 @@ namespace IngameScript
         /// </summary>
         private Program()
         {
+            if (debug) Echo("Debug: Program()");
+
             // Basic Settings
             Runtime.UpdateFrequency = UpdateFrequency.None;
             customData = Me.CustomData;
@@ -428,6 +444,8 @@ namespace IngameScript
         /// <param name="argument">The input if the script is run with an argument</param>
         public void Main(string argument/*, UpdateType updateSource*/)
         {
+            if (debug) Echo("Debug: Main()");
+
             customData = Me.CustomData;
             bool addedNewBlockgroups = false;
 
