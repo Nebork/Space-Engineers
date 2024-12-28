@@ -27,7 +27,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Renaming Script v.1.0.4
+        Nebork's Renaming Script v.1.0.5
 
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
@@ -40,7 +40,7 @@ namespace IngameScript
         */
 
 
-        // Any changes made below the following line are made on your own risk!
+        // Any changes made below the following line are made at your own risk!
         // --------------------------------------------------------------------------------------------------------
 
 
@@ -297,7 +297,7 @@ namespace IngameScript
         private void CreateCustomData()
         {
             string[] cdText = {
-                "; Nebork's Renaming Script, v.1.0.4",
+                "; Nebork's Renaming Script, v.1.0.5",
                 "",
                 "; This script gives every functional block on this grid a uniform naming.",
                 "; You can also set a lot of the properties at once.",
@@ -366,6 +366,8 @@ namespace IngameScript
         /// </summary>
         private void ReadIni()
         {
+            if (debug) Echo("Debug: ReadIni()");
+
             MyIni _ini = new MyIni();
 
             // Try to parse the ini
@@ -401,29 +403,7 @@ namespace IngameScript
             if (debug) Echo("Debug: Program()");
 
             // Basic Settings
-            Runtime.UpdateFrequency = UpdateFrequency.None;
-            customData = Me.CustomData;
-
-            // Clears list of any old, unused members
-            blockGroups.Clear();
-
-            // Creates the custom data or loads it's settings
-            if (customData == "")
-            {
-                CreateCustomData();
-                Echo("First Time Setup!\nPlease check the custom data of this block and set all settings.");
-            }
-            else
-            {
-                LoadBlockGroups();
-                Echo("Custom Data Found!\nPlease check the custom data and run the script.");
-            }
-
-            // Find all block groups and add any new to the list
-            CreateBlockGroups();
-            AddBlockGroupsToCd();
-
-            Me.CustomData = customData;
+            Runtime.UpdateFrequency = UpdateFrequency.Once;
 
             /* Changes the programmable block's interface
             Me.CustomName = "Nebork's Renaming";
@@ -442,12 +422,22 @@ namespace IngameScript
         /// If none were added, renames and sets every block according to the CD, else give a hint.
         /// </summary>
         /// <param name="argument">The input if the script is run with an argument</param>
-        public void Main(string argument/*, UpdateType updateSource*/)
+        public void Main(string argument, UpdateType updateSource)
         {
             if (debug) Echo("Debug: Main()");
 
             customData = Me.CustomData;
             bool addedNewBlockgroups = false;
+
+            if (updateSource == UpdateType.Once)
+            {
+                if (customData == "")
+                {
+                    CreateCustomData();
+                    Echo("First Time Setup!");
+                }
+                else Echo("Custom Data Found!");
+            }
 
             ReadIni();
             
@@ -474,6 +464,13 @@ namespace IngameScript
             {
                 Me.CustomData = customData;
                 Echo("New block groups were added.\nPlease check the settings and run again.");
+                return;
+            }
+
+            if (updateSource == UpdateType.Once)  // If the script is run via Program()/recompile
+            {
+                Me.CustomData = customData;
+                Echo("Please run the script to rename.");
                 return;
             }
 
