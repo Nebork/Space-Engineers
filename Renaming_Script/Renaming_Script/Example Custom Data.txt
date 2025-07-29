@@ -1,4 +1,4 @@
-; Nebork's Renaming Script, v.1.0.5
+; Nebork's Renaming Script, v.1.0.6
 
 ; This script gives every functional block on this grid a uniform naming.
 ; You can also set a lot of the properties at once.
@@ -10,7 +10,7 @@
 
 ; If you run the script with an argument, the script will interpret
 ; it as the GridName. Adding a second argument (separated by a ",")
-; will define it's prefix.
+; will define it's Prefix. See below.
 
 ; ============================
 [Global Settings]
