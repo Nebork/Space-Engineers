@@ -97,8 +97,6 @@ namespace IngameScript
             /// <summary>
             /// Main function. Renames every block in the group with the given command.
             /// </summary>
-            /// <param name="workOnSubgrids">[bool] if true renames works on every block, no matter the gridName.</param>
-            /// <param name="gridName">[string] only renames blocks, which belong on the grid with this name.</param>
             /// <returns>0 if successful, -1 if Process() failed</returns>
             public int Rename()
             {
@@ -422,13 +420,13 @@ namespace IngameScript
         /// If none were added, renames and sets every block according to the CD, else give a hint.
         /// </summary>
         /// <param name="argument">The input if the script is run with an argument</param>
+        /// <param name="updateSource">Changes depending on what triggered this function or if the function should be run again on its own.</param>
         public void Main(string argument, UpdateType updateSource)
         {
             if (debug) Echo("Debug: Main()");
 
             customData = Me.CustomData;
             bool addedNewBlockgroups = false;
-
             if (updateSource == UpdateType.Once)
             {
                 if (customData == "")
