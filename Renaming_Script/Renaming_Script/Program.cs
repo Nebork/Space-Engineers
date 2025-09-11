@@ -27,7 +27,7 @@ namespace IngameScript
         // COPY FROM HERE
 
         /*
-        Nebork's Renaming Script v.1.0.6
+        Nebork's Renaming Script v.1.0.7
 
         This script is used to rename every block uniformly in the control panel.
         This is extremely useful, if you care about proper naming and organising blocks WITHOUT having to rename 100+ blocks manually.
@@ -295,7 +295,7 @@ namespace IngameScript
         private void CreateCustomData()
         {
             string[] cdText = {
-                "; Nebork's Renaming Script, v.1.0.6",
+                "; Nebork's Renaming Script, v.1.0.7",
                 "",
                 "; This script gives every functional block on this grid a uniform naming.",
                 "; You can also set a lot of the properties at once.",
@@ -343,13 +343,13 @@ namespace IngameScript
                 "; Write your wanted tags behind every block type the way you like it.",
                 "; Order of tags is not required.",
                 "",
-                "; B: Show in toolbar config",
-                "; H: Show on HUD",
-                "; I: Show in inventory",
-                "; N: Number all blocks of this type",
-                "; R: Renames the base name to a given string in quotation marks",
-                "; S: Skips the whole block type. No block will be touched!",
-                "; T: Show in terminal",
+                "; -B: Show in toolbar config",
+                "; -H: Show on HUD",
+                "; -I: Show in inventory",
+                "; -N: Number all blocks of this type",
+                "; -R: Renames the base name to a given string in quotation marks",
+                "; -S: Skips the whole block type. No block will be touched!",
+                "; -T: Show in terminal",
                 "",
                 "; Example: Refinery = -I -N -R \"Smelter\"",
                 "; All refineries are shown in the inventory and numbered.",
